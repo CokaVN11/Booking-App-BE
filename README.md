@@ -9,5 +9,6 @@
 ```bash
 PORT=3000
 MONGO_URI=your_mongo_uri
+JWT_SECRET=s3cr3t
 ```
 4. Run `npm run start` to start the server
