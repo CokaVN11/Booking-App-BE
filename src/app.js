@@ -48,5 +48,6 @@ mongoose
   })
   .catch((err) => {
     console.error("[MONGO] Connection error", err.message);
+    console.log(process.env.MONGO_URL);
     process.exit();
   });
