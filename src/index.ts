@@ -8,7 +8,6 @@ import logger from 'morgan';
 // routes
 import { authRoute, bookingRoute, customerRoute, moderatorRoute } from "./routes";
 
-// const __filename = fileURLToPath(import.meta.url);
 dotenv.config({ path: __dirname + '/.env' });
 
 const app = express();
