@@ -1,4 +1,5 @@
 import "dotenv/config";
+import 'module-alias/register';
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
@@ -19,7 +20,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use(logger('dev'));
 
-app.use('/api', router);
 router.get('/', (_req, res) => {
   console.log('Welcome to the JoyServe API');
   res.send('Welcome to the JoyServe API');

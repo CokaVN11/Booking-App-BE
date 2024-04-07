@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { authController } from "../controllers/auth.controller";
+import { AuthController } from "@controllers";
 
 export const authRoute = Router();
 
@@ -8,9 +8,9 @@ authRoute.get("/", (_req, res) => {
 });
 
 authRoute.post("/login", (req, res) => {
-  authController.login(req, res);
+  AuthController.getInstance().login(req, res);
 });
 
 authRoute.post("/hash-password", (req, res) => {
-  authController.hashPassword(req, res);
+  AuthController.getInstance().hashPassword(req, res);
 });
