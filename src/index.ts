@@ -1,3 +1,4 @@
+import 'module-alias/register';
 import "dotenv/config";
 import express from "express";
 import dotenv from "dotenv";
@@ -8,7 +9,6 @@ import logger from 'morgan';
 // routes
 import { authRoute, bookingRoute, customerRoute, moderatorRoute } from "./routes";
 
-// const __filename = fileURLToPath(import.meta.url);
 dotenv.config({ path: __dirname + '/.env' });
 
 const app = express();
@@ -32,7 +32,7 @@ app.use('/customer', customerRoute);
 app.use('/booking', bookingRoute);
 
 mongoose
-  .connect(process.env.MONGO_URL ?? "")
+  .connect(process.env.MONGO_URL + "?appName=JoyHub")
   .then(() => {
     console.log("[MONGO] Successfully connect to MongoDB.");
     app.listen(process.env.PORT, () => {
