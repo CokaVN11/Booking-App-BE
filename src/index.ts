@@ -26,10 +26,10 @@ router.get('/', (_req, res) => {
   res.send('Welcome to the JoyServe API');
 });
 
-app.use('/auth', authRoute);
-app.use('/moderator', moderatorRoute);
-app.use('/customer', customerRoute);
-app.use('/booking', bookingRoute);
+router.use('/auth', authRoute);
+router.use('/moderator', moderatorRoute);
+router.use('/customer', customerRoute);
+router.use('/booking', bookingRoute);
 
 mongoose
   .connect(process.env.MONGO_URL + "?appName=JoyHub")

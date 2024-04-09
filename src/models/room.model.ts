@@ -5,9 +5,10 @@ const roomTypeSchema = new Schema({
         type: String,
         required: true,
     },
-    hotel_id: {
-        type: String,
+    hotel: {
+        type: Schema.Types.ObjectId,
         required: true,
+        ref: "Account"
     },
     description: {
         type: String,
@@ -36,53 +37,37 @@ const roomTypeSchema = new Schema({
 });
 
 const roomSchema = new Schema({
-    hotel_id: {
-        type: String,
+    hotel: {
+        type: Schema.Types.ObjectId,
         required: true,
+        ref: "Account"
     },
     room_type: {
-        type: String,
+        type: Schema.Types.ObjectId,
         required: true,
+        ref: "RoomType"
     },
     name: {
         type: String,
         required: true,
     },
-    isAcepeted: {
+    is_accepted: {
         type: Boolean,
         default: false,
     },
-    isBooked: {
+    is_booked: {
         type: Boolean,
         default: false,
-    },
-    description: {
-        type: String,
-        required: false,
-    },
-    price: {
-        type: Number,
-        required: true,
-    },
-    guest: {
-        type: Number,
-        required: true,
-    },
-    bedroom: {
-        type: Number,
-        required: true,
-    },
-    bathroom: {
-        type: Number,
-        required: true,
-    },
-    area: {
-        type: Number,
-        required: true,
     },
     image:{
-        type: Array,
-    }
+        type: [String],
+    },
+    amenities_ids: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Amenity"
+        }
+    ],
 });
 
 const amenitySchema = new Schema({
@@ -90,49 +75,15 @@ const amenitySchema = new Schema({
         type: String,
         required: true,
     },
-    amenity_id: {
-        type: String,
-        required: true,
-    },
-});
-
-const roomAmenitySchema = new Schema({
-    room_id: {
-        type: String,
-        required: true,
-    },
-    amenity_id: {
-        type: String,
-        required: true,
-    },
-});
-
-const roomImageSchema = new Schema({
-    room_id: {
-        type: String,
-        required: true,
-    },
-    hotel_id: {
-        type: String,
-        required: true,
-    },
-    image: {
-        type: String,
-        required: true,
-    },
 });
 
 
-export const RoomType = model("room_type", roomTypeSchema);
-export const Room = model("room", roomSchema);
-export const AmenityModel = model("amenity", amenitySchema);
-export const RoomAmenity = model("room_amenity", roomAmenitySchema);
-export const RoomImage = model("room_image", roomImageSchema);
+export const RoomType = model("RoomType", roomTypeSchema);
+export const Room = model("Room", roomSchema);
+export const Amenity = model("Amenity", amenitySchema);
 
 export default {
     RoomType,
     Room,
-    AmenityModel,
-    RoomAmenity,
-    RoomImage,
+    Amenity
 }
