@@ -11,6 +11,10 @@ authRoute.post("/login", (req, res) => {
   AuthController.getInstance().login(req, res);
 });
 
+authRoute.post("/register", (req, res) => {
+  AuthController.getInstance().register(req, res);
+});
+
 authRoute.post("/hash-password", (req, res) => {
   AuthController.getInstance().hashPassword(req, res);
 });

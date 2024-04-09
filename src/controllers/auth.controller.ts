@@ -46,6 +46,17 @@ class AuthController {
       return res.status(500).json({ message: _error.message });
     }
   };
+
+  register = async (req: Request, res: Response) => {
+    try {
+      const { username, password, email, role } = req.body;
+      await AuthService.getInstance().addNewAccount(username, password, email, role);
+      return res.status(201).json({ message: "Account created successfully" });
+    } catch (error) {
+      const _error = error as Error;
+      return res.status(500).json({ message: _error.message });
+    }
+  };
 } 
 
 export { AuthController }

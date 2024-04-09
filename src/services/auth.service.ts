@@ -34,6 +34,37 @@ class AuthService {
     const hashedPasswordBuf = crypto.scryptSync(password, salt, 64);
     return crypto.timingSafeEqual(buf, hashedPasswordBuf);
   };
+
+  addNewAccount = async (
+    username: string, 
+    password: string,
+    email: string,
+    role: string, 
+  ) => {
+    try {
+      if(!username || !password || !email || !role){
+        throw new Error("Missing required fields");
+      }
+
+      if(await this.getAccountByUsername(username)){
+        throw new Error("Account already exists");
+      }
+
+      const hashedPassword = await this.hashPassword(password);
+
+      await Account.create({
+        username,
+        password: hashedPassword,
+        email,
+        role,
+        wallet: 0,
+      });
+    }
+    catch (error) {
+      const _error = error as Error;
+      throw new Error(`${_error.message}`);
+    }
+  };
 }
 
 export { AuthService };
