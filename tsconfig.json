@@ -1,12 +1,12 @@
 {
-  "files": ["./src/type.d.ts", "./src/env.d.ts", "./global.d.ts"],
+  "files": ["./src/type.d.ts", "./src/env.d.ts"],
   "exclude": ["node_modules"],
-  "include": ["src/**/*.ts"],
+  "include": ["./src/**/*.ts"],
   "ts-node": {"esm": true},
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@src/*": ["src/*"],
+      "@/*": ["src/*"],
       "@routes": ["src/routes"],
       "@routes/*": ["src/routes/*"],
       "@controllers": ["./src/controllers"],
