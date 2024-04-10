@@ -18,6 +18,11 @@ export class AccountController {
   register = async (req: Request, res: Response) => {
     try {
       const { username, email, password, role, bank_number, wallet, phone, fullname, hotel_name, hotel_address, description, image } = req.body;
+
+      if(!username || !password || !email || !role){
+        throw new Error("Missing required fields");
+      }
+
       const user = await AccountService.getInstance().addAccount({ username, email, password, role, bank_number, wallet, phone, fullname, hotel_name, hotel_address, description, image });
       res.status(200).json(user);
     } catch (error) {

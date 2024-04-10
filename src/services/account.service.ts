@@ -39,6 +39,10 @@ export class AccountService {
   }
 
   addAccount = async (user: Account) => {
+    if (await this.getAccountByUsername(user.username)) {
+      throw new Error("Account already exists");
+    }
+
     user.password = await this.hashPassword(user.password);
     const account = new Account(user);
     try {

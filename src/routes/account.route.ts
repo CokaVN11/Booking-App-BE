@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { AccountController } from "@controllers";
 
-export const authRoute = Router();
+export const accountRoute = Router();
 
-authRoute.post("/login", AccountController.getInstance().login);
+accountRoute.post("/login", AccountController.getInstance().login);
 
-authRoute.post("/register", AccountController.getInstance().register);
+accountRoute.post("/register", AccountController.getInstance().register);
