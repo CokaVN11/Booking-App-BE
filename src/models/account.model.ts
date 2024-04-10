@@ -3,80 +3,36 @@ const accountSchema = new Schema({
   username: {
     type: String,
     required: true,
-    min: 6,
+    minlength: 6,
   },
   email: {
-    type: String,
+    type: String, 
     required: true,
-    min: 6,
+    minlength: 6,
   },
   password: {
     type: String,
     required: true,
-    min: 5,
-  },
+    minlength: 6,
+  }, 
   role: {
     type: String,
     required: true,
+    enum: ["customer", "hotelier"]
   },
-  bank_number: {
-    type: String,
-    required: false,
-  },
+  bank_number: String,
   wallet: {
     type: Number,
-    required: false,
     default: 0,
   },
-  phone: {
-    type: String,
-    required: false,
-  },
-});
-
-const customerSchema = new Schema({
-  account_id: {
-    type: String,
-    required: true,
-  },
-  full_name: {
-    type: String,
-    required: true,
-  },
-});
-
-const moderatorSchema = new Schema({
-  account_id: {
-    type: String,
-    required: true,
-  },
-  hotel_name: {
-    type: String,
-    required: false,
-  },
-  address: {
-    type: String,
-    required: false,
-  },
-  description: {
-    type: String,
-    required: false,
-  },
-  owner_name: {
-    type: String,
-    required: false,
-  },
-  isAccepted: {
-    type: Boolean,
-    default: false,
-  },
-  image: {
-    // image url
-    type: String,
-    required: false,
-  },
-});
+  phone: String,
+  fullname: String,
+  // only hotelier
+  hotel_name: String,
+  hotel_address: String,
+  description: String,
+  image: String, // hotel image url
+}, { timestamps: true });
 
 export const Account = model("Account", accountSchema);
-export const Customer = model("Customer", customerSchema);
-export const Moderator = model("Moderator", moderatorSchema);
+export default { Account };
