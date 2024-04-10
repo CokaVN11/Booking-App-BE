@@ -1,5 +1,6 @@
 import { Account } from "@models/account.model";
 import { Schema } from "mongoose";
+import crypto from "crypto";
 
 type Account = {
   username: string;
@@ -38,6 +39,7 @@ export class AccountService {
   }
 
   addAccount = async (user: Account) => {
+    user.password = await this.hashPassword(user.password);
     const account = new Account(user);
     try {
       await account.save();
@@ -47,4 +49,27 @@ export class AccountService {
       throw new Error(_error.message);
     }
   }
+
+  getAccountByUsername = async (username: string) => {
+    try {
+      const account = await Account.findOne({ username });
+      return account;
+    } catch (error) {
+      const _error = error as Error;
+      throw new Error(`${_error.message}`);
+    }
+  };
+
+  hashPassword = async (password: string) => {
+    const salt = crypto.randomBytes(16).toString("hex");
+    const buf = crypto.scryptSync(password, salt, 64);
+    return `${buf.toString("hex")}.${salt}`;
+  };
+
+  comparePassword = async (password: string, storedPassword: string) => {
+    const [hashedPassword, salt] = storedPassword.split(".");
+    const buf = Buffer.from(hashedPassword, "hex");
+    const hashedPasswordBuf = crypto.scryptSync(password, salt, 64);
+    return crypto.timingSafeEqual(buf, hashedPasswordBuf);
+  };
 }
