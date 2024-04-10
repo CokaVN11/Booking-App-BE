@@ -1,21 +1,7 @@
-import { Account } from "@models/account.model";
+import { AccountModel } from "@models/account.model";
 import { Schema } from "mongoose";
 import crypto from "crypto";
 
-type Account = {
-  username: string;
-  email: string;
-  password: string;
-  role: string;
-  bank_number: string;
-  wallet: number;
-  phone: string;
-  fullname: string;
-  hotel_name: string | null;
-  hotel_address: string | null;
-  description: string | null;
-  image: string | null;
-}
 
 export class AccountService {
   private static instance: AccountService | null = null;
@@ -31,7 +17,7 @@ export class AccountService {
   }
 
   getAccount = async (id: Schema.Types.ObjectId) => {
-    const account = await Account.findById(id);
+    const account = await AccountModel.findById(id);
     if (!account) {
       throw new Error("Account not found");
     }
@@ -44,7 +30,7 @@ export class AccountService {
     }
 
     user.password = await this.hashPassword(user.password);
-    const account = new Account(user);
+    const account = new AccountModel(user);
     try {
       await account.save();
       return account;
@@ -56,7 +42,7 @@ export class AccountService {
 
   getAccountByUsername = async (username: string) => {
     try {
-      const account = await Account.findOne({ username });
+      const account = await AccountModel.findOne({ username });
       return account;
     } catch (error) {
       const _error = error as Error;
