@@ -17,7 +17,7 @@ export class ModeratorController {
   getAllAmenity = async (_req: Request, res: Response) => {
     try {
       const amenities = await ModeratorService.getInstance().getAllAmenity();
-      res.status(200).json(amenities);
+      res.status(200).json({ data: amenities });
     } catch (error) {
       const _error = error as Error;
       res.status(400).json({ message: _error.message });
@@ -28,7 +28,7 @@ export class ModeratorController {
     try {
       const id = req.params.id;
       const amenity = await ModeratorService.getInstance().getAmenity(id);
-      res.status(200).json(amenity);
+      res.status(200).json({ data: amenity });
     } catch (error) {
       const _error = error as Error;
       res.status(400).json({ message: _error.message });
@@ -39,7 +39,7 @@ export class ModeratorController {
     try {
       const { name } = req.body;
       const amenity = await ModeratorService.getInstance().addAmenity(name);
-      res.status(200).json(amenity);
+      res.status(200).json({ data: amenity });
     } catch (error) {
       const _error = error as Error;
       res.status(400).json({ message: _error.message });
@@ -54,7 +54,7 @@ export class ModeratorController {
         id,
         name
       );
-      res.status(200).json(amenity);
+      res.status(200).json({ data: amenity });
     } catch (error) {
       const _error = error as Error;
       res.status(400).json({ message: _error.message });
@@ -64,8 +64,8 @@ export class ModeratorController {
   deleteAmenity = async (req: Request, res: Response) => {
     try {
       const id = req.params.id;
-      const amenity = await ModeratorService.getInstance().deleteAmenity(id);
-      res.status(200).json(amenity);
+      await ModeratorService.getInstance().deleteAmenity(id);
+      res.status(200).json({ message: "Amenity deleted" });
     } catch (error) {
       const _error = error as Error;
       res.status(400).json({ message: _error.message });
@@ -74,27 +74,8 @@ export class ModeratorController {
 
   addRoomType = async (req: Request, res: Response) => {
     try {
-      const {
-        name,
-        hotel,
-        description,
-        price,
-        guest,
-        bedroom,
-        bathroom,
-        area,
-      } = req.body;
-      const roomType = await ModeratorService.getInstance().addRoomType({
-        name,
-        hotel,
-        description,
-        price,
-        guest,
-        bedroom,
-        bathroom,
-        area,
-      });
-      res.status(200).json(roomType);
+      const roomType = await ModeratorService.getInstance().addRoomType(req.body);
+      res.status(200).json({ data: roomType });
     } catch (error) {
       const _error = error as Error;
       res.status(400).json({ message: _error.message });
@@ -103,15 +84,8 @@ export class ModeratorController {
 
   addRoom = async (req: Request, res: Response) => {
     try {
-      const { hotel, room_type, name, image, amenities_ids } = req.body;
-      const room = await ModeratorService.getInstance().addRoom({
-        hotel,
-        room_type,
-        name,
-        image,
-        amenities_ids,
-      });
-      res.status(200).json(room);
+      const room = await ModeratorService.getInstance().addRoom(req.body);
+      res.status(200).json({ data: room });
     } catch (error) {
       const _error = error as Error;
       res.status(400).json({ message: _error.message });

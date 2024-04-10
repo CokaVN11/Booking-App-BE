@@ -8,8 +8,7 @@
 3. Create a `.env` file in the root directory and add the following environment variables:
 ```bash
 PORT=3000
-MONGO_URI=your_mongo_uri
-JWT_SECRET=s3cr3t
+MONGO_URL=your_mongo_uri
 ```
 4. Run `npm run start` to start the server
 

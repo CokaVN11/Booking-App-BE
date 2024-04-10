@@ -1,2 +1,2 @@
 export * from './moderator.controller'
-export * from './account.controller'
+export * from './auth.controller'

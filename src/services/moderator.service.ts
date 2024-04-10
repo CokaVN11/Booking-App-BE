@@ -1,24 +1,5 @@
 import { Amenity, Room, RoomType } from "@models/room.model";
 
-type RoomType = {
-  name: string;
-  hotel: string;
-  description: string;
-  price: number;
-  guest: number;
-  bedroom: number;
-  bathroom: number;
-  area: number;
-};
-
-type Room = {
-  hotel: string;
-  room_type: string;
-  name: string;
-  image: string;
-  amenities_ids: string[];
-};
-
 export class ModeratorService {
   private static instance: ModeratorService | null = null;
 
@@ -46,26 +27,35 @@ export class ModeratorService {
       throw new Error("Amenity not found");
     }
     return amenity;
-  }
+  };
 
   addAmenity = async (name: string) => {
-    const amenity = new Amenity({ name });
+    const amenityExist = await Amenity.findOne({ name });
+    if (amenityExist) {
+      throw new Error("Amenity already exist");
+    }
+
     try {
+      const amenity = new Amenity({ name });
       await amenity.save();
       return amenity;
     } catch (error) {
       const _error = error as Error;
       throw new Error(_error.message);
     }
-  }
+  };
 
   updateAmenity = async (id: string, name: string) => {
-    const amenity = await Amenity.findByIdAndUpdate(id, { name }, { new: true });
+    const amenity = await Amenity.findByIdAndUpdate(
+      id,
+      { name },
+      { new: true }
+    );
     if (!amenity) {
       throw new Error("Amenity not found");
     }
     return amenity;
-  }
+  };
 
   deleteAmenity = async (id: string) => {
     const amenity = await Amenity.findByIdAndDelete(id);
@@ -73,7 +63,7 @@ export class ModeratorService {
       throw new Error("Amenity not found");
     }
     return amenity;
-  }
+  };
 
   getAllRoom = async () => {
     const rooms = await Room.find();
@@ -92,7 +82,7 @@ export class ModeratorService {
       const _error = error as Error;
       throw new Error(_error.message);
     }
-  }
+  };
 
   addRoom = async (room_data: Room) => {
     const room = new Room(room_data);
@@ -103,5 +93,5 @@ export class ModeratorService {
       const _error = error as Error;
       throw new Error(_error.message);
     }
-  }
+  };
 }
