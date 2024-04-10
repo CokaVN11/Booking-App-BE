@@ -1,89 +1,61 @@
-import { Schema, model } from "mongoose";
+import { prop, getModelForClass, Ref } from "@typegoose/typegoose";
+import { Amenity } from "@src/types";
+import { Account } from "./account.model";
+import mongoose from "mongoose";
 
-const roomTypeSchema = new Schema({
-    name: {
-        type: String,
-        required: true,
-    },
-    hotel: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: "Account"
-    },
-    description: {
-        type: String,
-        required: false,
-    },
-    price: {
-        type: Number,
-        required: true,
-    },
-    guest: {
-        type: Number,
-        required: true,
-    },
-    bedroom: {
-        type: Number,
-        required: true,
-    },
-    bathroom: {
-        type: Number,
-        required: true,
-    },
-    area: {
-        type: Number,
-        required: true,
-    },
-});
+export class RoomType {
+    @prop({ required: true })
+    public name!: string;
 
-const roomSchema = new Schema({
-    hotel: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: "Account"
-    },
-    room_type: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: "RoomType"
-    },
-    name: {
-        type: String,
-        required: true,
-    },
-    is_accepted: {
-        type: Boolean,
-        default: false,
-    },
-    is_booked: {
-        type: Boolean,
-        default: false,
-    },
-    image:{
-        type: [String],
-    },
-    amenities_ids: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Amenity"
-        }
-    ],
-});
+    @prop({ ref: "Account", required: true })
+    public hotel!: Ref<Account>;
 
-const amenitySchema = new Schema({
-    name: {
-        type: String,
-        required: true,
-    },
-});
+    @prop({ required: true })
+    public description!: string;
 
+    @prop({ required: true })
+    public price!: number;
 
-export const RoomType = model("RoomType", roomTypeSchema);
-export const Room = model("Room", roomSchema);
-export const Amenity = model("Amenity", amenitySchema);
+    @prop({ required: true })
+    public guest!: number;
+
+    @prop({ required: true })
+    public bedroom!: number;
+
+    @prop({ required: true })
+    public bathroom!: number;
+
+    @prop({ required: true })
+    public area!: number;
+}
+
+export class Room {
+    @prop({ ref: "Account", required: true })
+    public hotel!: Ref<Account>;
+
+    @prop({ ref: "RoomType", required: true })
+    public room_type!: Ref<RoomType>;
+
+    @prop({ required: true })
+    public name!: string;
+
+    @prop({ default: false })
+    is_accepted?: boolean;
+
+    @prop({ default: false })
+    is_booked?: boolean;
+
+    @prop({ required: true })
+    image!: mongoose.Types.Array<string>;
+    
+    @prop({ required: true })
+    amenities!: mongoose.Types.Array<Amenity>;
+}
+
+export const RoomTypeModel = getModelForClass(RoomType);
+export const RoomModel = getModelForClass(Room);
 
 export default {
-    RoomType,
-    Room,
-    Amenity
+    RoomTypeModel,
+    RoomModel
 }

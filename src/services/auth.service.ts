@@ -1,20 +1,5 @@
-import { Account } from "@models/account.model";
+import { Account, AccountModel } from "@models/account.model";
 import { Schema } from "mongoose";
-
-type Account = {
-  username: string;
-  email: string;
-  password: string;
-  role: string;
-  bank_number: string;
-  wallet: number;
-  phone: string;
-  fullname: string;
-  hotel_name: string | null;
-  hotel_address: string | null;
-  description: string | null;
-  image: string | null;
-}
 
 export class AccountService {
   private static instance: AccountService | null = null;
@@ -30,7 +15,7 @@ export class AccountService {
   }
 
   getAccount = async (id: Schema.Types.ObjectId) => {
-    const account = await Account.findById(id);
+    const account = await AccountModel.findById(id);
     if (!account) {
       throw new Error("Account not found");
     }
@@ -38,7 +23,7 @@ export class AccountService {
   }
 
   addAccount = async (user: Account) => {
-    const account = new Account(user);
+    const account = new AccountModel(user);
     try {
       await account.save();
       return account;

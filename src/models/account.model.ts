@@ -1,39 +1,42 @@
-import { Schema, model } from "mongoose";
+import { getModelForClass, prop } from "@typegoose/typegoose";
 
-const accountSchema = new Schema({
-  username: {
-    type: String,
-    required: true,
-    minlength: 6,
-  },
-  email: {
-    type: String, 
-    required: true,
-    minlength: 6,
-  },
-  password: {
-    type: String,
-    required: true,
-    minlength: 6,
-  }, 
-  role: {
-    type: String,
-    required: true,
-    enum: ["customer", "hotelier"]
-  },
-  bank_number: String,
-  wallet: {
-    type: Number,
-    default: 0,
-  },
-  phone: String,
-  fullname: String,
-  // only hotelier
-  hotel_name: String,
-  hotel_address: String,
-  description: String,
-  image: String, // hotel image url
-}, { timestamps: true });
+export class Account {
+  @prop({ required: true, minlength: 6 })
+  username!: string;
 
-export const Account = model("Account", accountSchema);
-export default { Account };
+  @prop({ required: true, minlength: 6 })
+  email!: string;
+
+  @prop({ required: true, minlength: 6 })
+  password!: string;
+
+  @prop({ required: true, enum: ["customer", "hotelier"] })
+  role!: string;
+
+  @prop()
+  bank_number?: string;
+
+  @prop({ default: 0 })
+  wallet?: number;
+
+  @prop()
+  phone?: string;
+
+  @prop()
+  fullname?: string;
+
+  @prop()
+  hotel_name?: string;
+
+  @prop()
+  hotel_address?: string;
+
+  @prop()
+  description?: string;
+
+  @prop()
+  image?: string;
+}
+
+export const AccountModel = getModelForClass(Account);
+export default { AccountModel };

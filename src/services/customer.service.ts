@@ -1,19 +1,4 @@
-import { Booking, Bill } from "@models/booking.model";
-
-type Booking = {
-  hotel: string;
-  customer: string;
-  room: string;
-  check_in: Date;
-  check_out: Date;
-};
-
-type Bill = {
-  customer: string;
-  total: number;
-  status: string;
-  bookings: string[];
-};
+import { Booking, BookingModel } from "@models/booking.model";
 
 export class CustomerService {
   private static instance: CustomerService | null = null;
@@ -29,7 +14,7 @@ export class CustomerService {
   }
 
   addBooking = async (booking: Booking) => {
-    const newBooking = new Booking(booking);
+    const newBooking = new BookingModel(booking);
     try {
       await newBooking.save();
       return newBooking;

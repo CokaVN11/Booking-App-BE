@@ -1,109 +1,78 @@
-import { Schema, model } from 'mongoose';
-const notificationSchema = new Schema({
-    from_id: {
-        type: Schema.Types.ObjectId,
-        ref: 'Account',
-        required: true,
-    },
-    to_id: {
-        type: Schema.Types.ObjectId,
-        ref: 'Account',
-        required: true,
-    },
-    for: {
-        type: String,
-        enum: ['hotelier', 'customer'],
-    },
-    title: {
-        type: String,
-        required: true,
-    },
-    content: {
-        type: String,
-        required: true,
-    },
-    status: {
-        type: String,
-        enum: ['accepted', 'cancelled', 'waiting', 'warning', 'approved', 'rejected'],
-        default: 'waiting',
-    },
-    booking: {
-        type: Schema.Types.ObjectId,
-        ref: 'Booking',
-    },
-    room: {
-        type: String,
-        ref: 'Room',
-    },
-    is_read: {
-        type: Boolean,
-        default: false,
-    },
-}, { timestamps: true });
+import { NotificationStatus, Role } from '@src/types';
+import { Ref, getModelForClass, prop } from '@typegoose/typegoose';
+import { Account } from './account.model';
+import { Booking } from './booking.model';
+import { Room } from './room.model';
 
-const reportSchema = new Schema({
-    booking: {
-        type: Schema.Types.ObjectId,
-        ref: 'Booking',
-        required: true,
-    },
-    hotel: {
-        type: Schema.Types.ObjectId,
-        ref: 'Account',
-        required: true,
-    },
-    title: {
-        type: String,
-        required: true,
-    },
-    content: {
-        type: String,
-        required: true,
-    },
-    is_read: {
-        type: Boolean,
-        default: false,
-    },
-}, { timestamps: true });
+export class Notification {
+    @prop({ ref: () => Account, required: true })
+    public from_id!: Ref<Account>;
+    
+    @prop({ ref: () => Account, required: true })
+    public to_id!: Ref<Account>;
 
-const ratingSchema = new Schema({
-    customer: {
-        type: Schema.Types.ObjectId,
-        ref: 'Account',
-        required: true,
-    },
-    hotel: {
-        type: Schema.Types.ObjectId,
-        ref: 'Account',
-        required: true,
-    },
-    room: {
-        type: String,
-        ref: 'Room',
-        required: true,
-    },
-    content: {
-        type: String,
-        required: true,
-    },
-    star: {
-        type: Number,
-        min: 0,
-        max: 5,
-        default: 0,
-    },
-}, { timestamps: true });
+    @prop({ enum: Role, required: true })
+    for!: Role;
 
-notificationSchema.index({ booking: 1, status: 1, updatedAt: 1 }); 
-reportSchema.index({ booking: 1, updatedAt: 1 });
-ratingSchema.index({ updatedAt: 1 });
+    @prop({ required: true })
+    public title!: string;
 
-export const Notification = model('Notification', notificationSchema);
-export const Report = model('Report', reportSchema);
-export const Rating = model('Rating', ratingSchema);
+    @prop({ required: true })
+    public content!: string;
+
+    @prop({ enum: NotificationStatus, default: NotificationStatus.waiting })
+    public status?: NotificationStatus;
+
+    @prop({ ref: () => Booking })
+    public booking?: Ref<Booking>;
+
+    @prop({ ref: () => Room})
+    public room?: Ref<Room>;
+
+    @prop({ default: false })
+    public is_read?: boolean;
+}
+
+export class Report {
+    @prop({ ref: () => Booking, required: true })
+    public booking!: Ref<Booking>;
+
+    @prop({ ref: () => Account, required: true })
+    public hotel!: Ref<Account>;
+
+    @prop({ required: true })
+    public title!: string;
+
+    @prop({ required: true })
+    public content!: string;
+
+    @prop({ default: false })
+    public is_read?: boolean;
+}
+
+export class Rating {
+    @prop({ ref: () => Account, required: true })
+    public customer!: Ref<Account>;
+
+    @prop({ ref: () => Account, required: true })
+    public hotel!: Ref<Account>;
+
+    @prop({ ref: () => Room, required: true })
+    public room!: Ref<Room>;
+
+    @prop({ required: true })
+    public content!: string;
+
+    @prop({ min: 0, max: 5, default: 0 })
+    public star!: number;
+}
+
+export const NotificationModel = getModelForClass(Notification)
+export const ReportModel = getModelForClass(Report)
+export const RatingModel = getModelForClass(Rating)
 
 export default {
-    Notification,
-    Report,
-    Rating,
+    NotificationModel,
+    ReportModel,
+    RatingModel,
 };
