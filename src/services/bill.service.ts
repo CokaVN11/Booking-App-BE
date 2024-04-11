@@ -1,4 +1,4 @@
-import { BillModel } from "@/models";
+import { BillModel } from "@models";
 
 export class BillService {
     private static instance: BillService | null = null;

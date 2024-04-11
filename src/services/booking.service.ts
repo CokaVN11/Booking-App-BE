@@ -1,4 +1,4 @@
-import { BookingModel } from "@/models";
+import { BookingModel } from "@models";
 
 export class BookingService {
     private static instance: BookingService | null = null;

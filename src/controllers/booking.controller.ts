@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { BookingService } from "@/services";
+import { BookingService } from "@services";
 
 export class BookingController {
     private static instance: BookingController | null = null;

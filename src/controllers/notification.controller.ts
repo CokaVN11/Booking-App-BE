@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { NotificationService } from "@/services";
+import { NotificationService } from "@services";
 
 export class NotificationController {
     private static instance: NotificationController | null = null;

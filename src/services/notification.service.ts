@@ -1,4 +1,4 @@
-import { NotificationModel } from "@/models";
+import { NotificationModel } from "@models";
 
 export class NotificationService {
     private static instance: NotificationService | null = null;

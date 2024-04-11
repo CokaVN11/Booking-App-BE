@@ -1,4 +1,4 @@
-import { AmenityModel } from "@/models";
+import { AmenityModel } from "@models";
 
 export class AmenityService {
     private static instance: AmenityService | null = null;

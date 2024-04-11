@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ReportService } from "@/services";
+import { ReportService } from "@services";
 
 export class ReportController {
     private static instance: ReportController | null = null;

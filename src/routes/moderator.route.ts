@@ -1,5 +1,5 @@
 import { Router } from "express";
-import * as Controller from "../controllers";
+import * as Controller from "@controllers";
 
 export const moderatorRoute = Router();
 

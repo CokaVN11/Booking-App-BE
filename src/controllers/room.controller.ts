@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { RoomService } from "@/services";
+import { RoomService } from "@services";
 
 export class RoomController {
     private static instance: RoomController | null = null;

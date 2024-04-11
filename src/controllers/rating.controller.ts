@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { RatingService } from "@/services";
+import { RatingService } from "@services";
 
 export class RatingController {
     private static instance: RatingController | null = null;

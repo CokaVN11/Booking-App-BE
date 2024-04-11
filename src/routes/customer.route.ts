@@ -1,4 +1,4 @@
-import * as Controller from "../controllers";
+import * as Controller from "@controllers";
 import { Router } from "express";
 
 export const customerRoute = Router();

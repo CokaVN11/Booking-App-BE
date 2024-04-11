@@ -1,4 +1,4 @@
-import { RoomModel } from "@/models";
+import { RoomModel } from "@models";
 
 export class RoomService {
     private static instance: RoomService | null = null;

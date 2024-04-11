@@ -1,4 +1,4 @@
-import { RatingModel } from "@/models";
+import { RatingModel } from "@models";
 
 export class RatingService {
     private static instance: RatingService | null = null;
