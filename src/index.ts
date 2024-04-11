@@ -34,7 +34,7 @@ router.use('/customer', customerRoute);
 router.use('/booking', bookingRoute);
 
 mongoose
-  .connect(process.env.MONGO_URL + "?appName=JoyHub")
+  .connect(process.env.MONGO_URL || "")
   .then(() => {
     console.log("[MONGO] Successfully connect to MongoDB.");
     app.listen(process.env.PORT, () => {
