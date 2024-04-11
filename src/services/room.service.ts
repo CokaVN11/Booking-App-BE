@@ -1,7 +1,7 @@
 import { RoomModel } from "@models";
 
 export class RoomService {
-    private static instance: RoomService | null = null;
+    private static instance?: RoomService;
 
     private constructor() { }
 
@@ -22,8 +22,12 @@ export class RoomService {
     };
 
     addRoom = async (room_data: Room) => {
-        const room = new RoomModel(room_data);
+        const roomExist = await RoomModel.findOne({ hotel: room_data.hotel, name: room_data.name });
+        if (roomExist) {
+            throw new Error("Room already exist");
+        }
         try {
+            const room = new RoomModel(room_data);
             await room.save();
             return room;
         } catch (error) {

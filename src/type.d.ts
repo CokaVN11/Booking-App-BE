@@ -76,8 +76,8 @@ type Room = {
   hotel: string;
   room_type: string;
   name: string;
-  is_accepted: boolean;
-  is_booked: boolean;
+  is_accepted?: boolean;
+  is_booked?: boolean;
   image: string[];
   amenities_ids: string[];
 }
