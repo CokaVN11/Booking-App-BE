@@ -12,7 +12,6 @@ import { authRoute, bookingRoute, customerRoute, moderatorRoute } from "./routes
 dotenv.config({ path: __dirname + '/.env' });
 
 const app = express();
-const router = express.Router();
 
 // middleware
 app.use(express.json());
@@ -20,7 +19,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use(logger('dev'));
 
-app.use('/api', router);
+const router = express.Router();
+app.use(router);
+
 router.get('/', (_req, res) => {
   console.log('Welcome to the JoyServe API');
   res.send('Welcome to the JoyServe API');
