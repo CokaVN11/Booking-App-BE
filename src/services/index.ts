@@ -1,4 +1,4 @@
-export * from './account.service';
+export * from './auth.service';
 export * from './amenity.service';
 export * from './bill.service';
 export * from './booking.service';

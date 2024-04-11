@@ -1,4 +1,4 @@
-export * from './account.controller';
+export * from './auth.controller';
 export * from './amenity.controller';
 export * from './bill.controller';
 export * from './booking.controller';

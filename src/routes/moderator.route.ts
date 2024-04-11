@@ -22,5 +22,5 @@ moderatorRoute.delete(
   Controller.AmenityController.getInstance().deleteAmenity
 );
 
-moderatorRoute.post("/room_type", ModeratorController.getInstance().addRoomType);
-moderatorRoute.post("/room", ModeratorController.getInstance().addRoom);
+moderatorRoute.post("/room_type", Controller.RoomTypeController.getInstance().addRoomType);
+moderatorRoute.post("/room", Controller.RoomController.getInstance().addRoom);
