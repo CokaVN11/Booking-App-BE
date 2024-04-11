@@ -35,4 +35,29 @@ export class AuthMiddleware {
         .json({ message: `Token verify error: ${_error.message}` });
     }
   };
+
+  authorize = async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user as any;
+    if (!user) {
+      return res.status(401).json({ message: "Unauthenticated request!" });
+    }
+
+    const url = req.originalUrl.replace("/", "");
+
+    try {
+      if (user.role !== url) {
+        return res.status(401).json({
+          message: `Unauthorized request for ${user.role} role`,
+        });
+      }
+      next();
+
+      return;
+    } catch (error) {
+      const _error = error as Error;
+      return res
+        .status(401)
+        .json({ message: `Error authorizing user: ${_error.message}` });
+    }
+  };
 }
