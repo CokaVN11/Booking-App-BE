@@ -5,9 +5,10 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from 'cors';
 import logger from 'morgan';
+import { AuthMiddleware } from '@middlewares';
 
 // routes
-import { authRoute, bookingRoute, customerRoute, moderatorRoute } from "./routes";
+import { authRoute, bookingRoute, customerRoute, moderatorRoute } from "@routes";
 
 dotenv.config({ path: __dirname + '/.env' });
 
@@ -28,6 +29,9 @@ router.get('/', (_req, res) => {
 });
 
 router.use('/auth', authRoute);
+
+router.use(AuthMiddleware.getInstance().authenticate);
+
 router.use('/moderator', moderatorRoute);
 router.use('/customer', customerRoute);
 router.use('/booking', bookingRoute);

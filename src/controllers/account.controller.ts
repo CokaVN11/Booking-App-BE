@@ -36,9 +36,10 @@ export class AccountController {
       ) {
         return res.status(401).json({ message: "Invalid username or password" });
       }
+      account.password = "*****";
       const token = jwt.sign(
-        { username: account.username, role: account.role },
-        process.env.JWT_SECRET ?? "s3cr3t",
+        { user: account },
+        process.env.TOKEN_SECRET ?? "default_jwt_secret",
         { expiresIn: "1h" }
       );
       return res.status(200).json({ message: "Login successful", token });
