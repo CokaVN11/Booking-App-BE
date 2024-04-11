@@ -1,20 +1,6 @@
-import { Account } from "@models/account.model";
+import { AccountModel } from "@models";
 import { Schema } from "mongoose";
 
-type Account = {
-  username: string;
-  email: string;
-  password: string;
-  role: string;
-  bank_number: string;
-  wallet: number;
-  phone: string;
-  fullname: string;
-  hotel_name: string | null;
-  hotel_address: string | null;
-  description: string | null;
-  image: string | null;
-}
 
 export class AccountService {
   private static instance: AccountService | null = null;
@@ -30,7 +16,7 @@ export class AccountService {
   }
 
   getAccount = async (id: Schema.Types.ObjectId) => {
-    const account = await Account.findById(id);
+    const account = await AccountModel.findById(id);
     if (!account) {
       throw new Error("Account not found");
     }
@@ -38,7 +24,12 @@ export class AccountService {
   }
 
   addAccount = async (user: Account) => {
-    const account = new Account(user);
+    if (await this.getAccountByUsername(user.username)) {
+      throw new Error("Account already exists");
+    }
+
+    user.password = await this.hashPassword(user.password);
+    const account = new AccountModel(user);
     try {
       await account.save();
       return account;
@@ -47,4 +38,27 @@ export class AccountService {
       throw new Error(_error.message);
     }
   }
+
+  getAccountByUsername = async (username: string) => {
+    try {
+      const account = await AccountModel.findOne({ username });
+      return account;
+    } catch (error) {
+      const _error = error as Error;
+      throw new Error(`${_error.message}`);
+    }
+  };
+
+  hashPassword = async (password: string) => {
+    const salt = crypto.randomBytes(16).toString("hex");
+    const buf = crypto.scryptSync(password, salt, 64);
+    return `${buf.toString("hex")}.${salt}`;
+  };
+
+  comparePassword = async (password: string, storedPassword: string) => {
+    const [hashedPassword, salt] = storedPassword.split(".");
+    const buf = Buffer.from(hashedPassword, "hex");
+    const hashedPasswordBuf = crypto.scryptSync(password, salt, 64);
+    return crypto.timingSafeEqual(buf, hashedPasswordBuf);
+  };
 }

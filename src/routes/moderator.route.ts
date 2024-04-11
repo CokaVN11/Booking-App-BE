@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { ModeratorController } from "@controllers";
+import * as Controller from "@controllers";
 
 export const moderatorRoute = Router();
 
@@ -7,19 +7,19 @@ moderatorRoute.get("/", (_req, res) => {
   res.send("Moderator route");
 });
 
-moderatorRoute.get("/amenity", ModeratorController.getInstance().getAllAmenity);
+moderatorRoute.get("/amenity", Controller.AmenityController.getInstance().getAllAmenity);
 moderatorRoute.get(
   "/amenity/:id",
-  ModeratorController.getInstance().getAmenity
+  Controller.AmenityController.getInstance().getAmenity
 );
-moderatorRoute.post("/amenity", ModeratorController.getInstance().addAmenity);
+moderatorRoute.post("/amenity", Controller.AmenityController.getInstance().addAmenity);
 moderatorRoute.put(
   "/amenity/:id",
-  ModeratorController.getInstance().updateAmenity
+  Controller.AmenityController.getInstance().updateAmenity
 );
 moderatorRoute.delete(
   "/amenity/:id",
-  ModeratorController.getInstance().deleteAmenity
+  Controller.AmenityController.getInstance().deleteAmenity
 );
 
 moderatorRoute.post("/room_type", ModeratorController.getInstance().addRoomType);

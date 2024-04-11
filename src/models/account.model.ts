@@ -35,5 +35,5 @@ const accountSchema = new Schema({
   image: String, // hotel image url
 }, { timestamps: true });
 
-export const Account = model("Account", accountSchema);
-export default { Account };
+export const AccountModel = model("Account", accountSchema);
+export default { AccountModel };

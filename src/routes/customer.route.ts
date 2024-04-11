@@ -1,10 +1,6 @@
-import { CustomerController } from "@controllers/customer.controller";
+import * as Controller from "@controllers";
 import { Router } from "express";
 
 export const customerRoute = Router();
 
-customerRoute.get("/", (_req, res) => {
-  res.send("Customer route");
-});
-
-customerRoute.post("/booking", CustomerController.getInstance().addBooking);
+customerRoute.post("/booking", Controller.BookingController.getInstance().addBooking);
