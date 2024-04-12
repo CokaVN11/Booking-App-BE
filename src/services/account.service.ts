@@ -1,5 +1,4 @@
 import { AccountModel } from "@models";
-import { Schema } from "mongoose";
 import crypto from "crypto";
 
 
@@ -16,7 +15,7 @@ export class AccountService {
     return AccountService.instance;
   }
 
-  getAccount = async (id: Schema.Types.ObjectId) => {
+  getAccount = async (id: string) => {
     const account = await AccountModel.findById(id);
     if (!account) {
       throw new Error("Account not found");

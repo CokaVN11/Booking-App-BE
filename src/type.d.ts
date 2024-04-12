@@ -38,16 +38,16 @@ type Booking = {
   updatedAt?: Timestamp;
 }
 
-type Notification = {
+type Noti = {
   from_id: string;
   to_id: string;
   for: string;
   title: string;
   content: string;
-  status: string;
+  status?: string;
   booking: string;
   room: string;
-  is_read: boolean;
+  is_read?: boolean;
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
 }

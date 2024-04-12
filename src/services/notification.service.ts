@@ -13,5 +13,14 @@ export class NotificationService {
         return NotificationService.instance;
     }
 
-    // Code here    
+    addNotification = async (notification: Noti) => {
+        try {
+            const newNotification = new NotificationModel(notification);
+            await newNotification.save();
+            return newNotification;
+        } catch (error) {
+            const _error = error as Error;
+            throw new Error(_error.message);
+        }
+    }; 
 }
