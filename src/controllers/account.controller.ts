@@ -46,7 +46,7 @@ export class AccountController {
           { expiresIn: "1h" },
         );
 
-        return res.status(200).json({ token });
+        return res.status(200).json({ message: "Login successfully", data: { token, account: user } });
       });
 
       return;
