@@ -5,13 +5,29 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from 'cors';
 import logger from 'morgan';
+import passport from 'passport';
+import passportConfig from './config/passport';
+import session from 'express-session';
+import { AuthMiddleware } from '@middlewares';
 
 // routes
-import { authRoute, bookingRoute, customerRoute, moderatorRoute } from "./routes";
+import { authRoute, bookingRoute, customerRoute, moderatorRoute } from "@routes";
 
 dotenv.config({ path: __dirname + '/.env' });
 
 const app = express();
+
+// Passport configuration
+passportConfig(passport);
+app.use(
+  session({
+    secret: process.env.PASSPORT_SECRET || "default-secret",
+    resave: false,
+    saveUninitialized: true,
+  }),
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 // middleware
 app.use(express.json());
@@ -28,6 +44,10 @@ router.get('/', (_req, res) => {
 });
 
 router.use('/auth', authRoute);
+
+router.use(AuthMiddleware.getInstance().authenticate);
+router.use(AuthMiddleware.getInstance().authorize);
+
 router.use('/moderator', moderatorRoute);
 router.use('/customer', customerRoute);
 router.use('/booking', bookingRoute);

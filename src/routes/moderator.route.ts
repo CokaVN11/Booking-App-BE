@@ -3,7 +3,7 @@ import * as Controller from "@controllers";
 
 export const moderatorRoute = Router();
 
-moderatorRoute.get("/", (_req, res) => {
+moderatorRoute.get("/", (_, res) => {
   res.send("Moderator route");
 });
 
