@@ -45,7 +45,7 @@ export class AuthMiddleware {
     const url = req.originalUrl.replace("/", "");
 
     try {
-      if (user.role !== url) {
+      if (user.role !== url.split("/")[0]) {
         return res.status(401).json({
           message: `Unauthorized request for ${user.role} role`,
         });
