@@ -82,4 +82,13 @@ export class AccountService {
       throw new Error(_error.message);
     }
   }
+
+  // check whether the hotel_id exist
+  checkHotelId = async (hotel_id: string) => {
+    const account = await AccountModel.findOne({_id: hotel_id});
+    if (!account) {
+      return false;
+    }
+    return true;
+  }
 }

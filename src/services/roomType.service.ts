@@ -80,4 +80,17 @@ export class RoomTypeService {
             throw new Error(_error.message);
         }
     }
+
+    checkRoomTypeId = async (room_type_id: string) => {
+        try {
+            const room_type = await RoomTypeModel.findById(room_type_id);
+            if (!room_type) {
+                return false;
+            }
+            return true;
+        } catch (error) {
+            const _error = error as Error;
+            throw new Error(_error.message);
+        }
+    }
 }
