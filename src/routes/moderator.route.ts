@@ -28,8 +28,9 @@ moderatorRoute.delete(
   Controller.AmenityController.getInstance().deleteAmenity
 );
 
-moderatorRoute.post(
-  "/room_type",
-  Controller.RoomTypeController.getInstance().addRoomType
-);
+moderatorRoute.post("/room_type", Controller.RoomTypeController.getInstance().addRoomType);
 moderatorRoute.post("/room", Controller.RoomController.getInstance().addRoom);
+
+moderatorRoute.get("/booking/:hotel", Controller.BookingController.getInstance().getBookingOfHotel);
+moderatorRoute.put("/booking", Controller.BookingController.getInstance().updateBookingStatus);
+moderatorRoute.delete("/booking/:id", Controller.BookingController.getInstance().deleteBooking);
