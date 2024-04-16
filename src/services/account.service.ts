@@ -5,7 +5,7 @@ import crypto from "crypto";
 export class AccountService {
   private static instance: AccountService | null = null;
 
-  private constructor() {}
+  private constructor() { }
 
   static getInstance(): AccountService {
     if (!AccountService.instance) {
@@ -61,4 +61,25 @@ export class AccountService {
     const hashedPasswordBuf = crypto.scryptSync(password, salt, 64);
     return crypto.timingSafeEqual(buf, hashedPasswordBuf);
   };
+
+  updateAccount = async (user: Account) => {
+    const account = await AccountModel.findOne({ username: user.username })
+    console.log(user.username, account);
+    if (!account) {
+      throw new Error("Account not found");
+    }
+
+    if (user.password) {
+      user.password = await this.hashPassword(user.password);
+    }
+
+    try {
+      await AccountModel.updateOne({ username: user.username }, user);
+      return await AccountModel.findOne({ username: user.username });
+    }
+    catch (error) {
+      const _error = error as Error;
+      throw new Error(_error.message);
+    }
+  }
 }

@@ -32,7 +32,7 @@ export class AuthMiddleware {
       const _error = error as Error;
       return res
         .status(401)
-        .json({ message: `Token verify error: ${_error.message}` });
+        .json({ message: `Token verify error: ${_error.message}, ${process.env.TOKEN_SECRET || "default_jwt_secret"}` });
     }
   };
 

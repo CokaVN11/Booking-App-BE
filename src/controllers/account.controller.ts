@@ -6,7 +6,7 @@ import passport from 'passport';
 export class AccountController {
   private static instance: AccountController | null = null;
 
-  private constructor() {}
+  private constructor() { }
 
   static getInstance(): AccountController {
     if (!AccountController.instance) {
@@ -52,4 +52,16 @@ export class AccountController {
       return;
     })(req, res);
   };
+
+  update = async (req: Request, res: Response) => {
+    try {
+      const { username, email, password, role, bank_number, wallet, phone, fullname, hotel_name, hotel_address, description, image } = req.body;
+      
+      const user = await AccountService.getInstance().updateAccount({ username, email, password, role, bank_number, wallet, phone, fullname, hotel_name, hotel_address, description, image });
+      res.status(200).json(user);
+    } catch (error) {
+      const _error = error as Error;
+      res.status(400).json({ message: _error.message });
+    }
+  }
 }
