@@ -3,16 +3,22 @@ import * as Controller from "@controllers";
 
 export const moderatorRoute = Router();
 
-moderatorRoute.get("/", (_req, res) => {
+moderatorRoute.get("/", (_, res) => {
   res.send("Moderator route");
 });
 
-moderatorRoute.get("/amenity", Controller.AmenityController.getInstance().getAllAmenity);
+moderatorRoute.get(
+  "/amenity",
+  Controller.AmenityController.getInstance().getAllAmenity
+);
 moderatorRoute.get(
   "/amenity/:id",
   Controller.AmenityController.getInstance().getAmenity
 );
-moderatorRoute.post("/amenity", Controller.AmenityController.getInstance().addAmenity);
+moderatorRoute.post(
+  "/amenity",
+  Controller.AmenityController.getInstance().addAmenity
+);
 moderatorRoute.put(
   "/amenity/:id",
   Controller.AmenityController.getInstance().updateAmenity

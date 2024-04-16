@@ -14,8 +14,12 @@ export class RoomTypeService {
     }
 
     addRoomType = async (room_type_data: RoomType) => {
-        const room_type = new RoomTypeModel(room_type_data);
+        const roomTypeExist = await RoomTypeModel.findOne({ hotel: room_type_data.hotel, name: room_type_data.name });
+        if (roomTypeExist) {
+            throw new Error("Room type already exist");
+        }
         try {
+            const room_type = new RoomTypeModel(room_type_data);
             await room_type.save();
             return room_type;
         } catch (error) {

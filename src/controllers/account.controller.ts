@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { AccountService } from '@services';
 import jwt from "jsonwebtoken";
+import passport from 'passport';
 
 export class AccountController {
   private static instance: AccountController | null = null;
@@ -27,24 +28,28 @@ export class AccountController {
   };
 
   login = async (req: Request, res: Response) => {
-    try {
-      const { username, password } = req.body;
-      const account = await AccountService.getInstance().getAccountByUsername(username);
-      if (
-        !account ||
-        !(await AccountService.getInstance().comparePassword(password, account.password))
-      ) {
-        return res.status(401).json({ message: "Invalid username or password" });
+    passport.authenticate("local", (err: Error, user: any, info: any) => {
+      if (err) {
+        return res.status(500).json({ message: err.message });
       }
-      const token = jwt.sign(
-        { username: account.username, role: account.role },
-        process.env.JWT_SECRET ?? "s3cr3t",
-        { expiresIn: "1h" }
-      );
-      return res.status(200).json({ message: "Login successful", token });
-    } catch (error) {
-      const _error = error as Error;
-      return res.status(500).json({ message: _error.message });
-    }
+      if (!user) {
+        return res.status(401).json({ message: info.message });
+      }
+      req.logIn(user, (err) => {
+        if (err) {
+          return res.status(500).json({ message: err.message });
+        }
+        user.password = "*****";
+        const token = jwt.sign(
+          { user },
+          process.env.TOKEN_SECRET || "default_jwt_secret",
+          { expiresIn: "1h" },
+        );
+
+        return res.status(200).json({ message: "Login successfully", data: { token, account: user } });
+      });
+
+      return;
+    })(req, res);
   };
 }
