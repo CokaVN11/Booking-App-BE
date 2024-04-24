@@ -33,8 +33,8 @@ export class RoomController {
       const rooms = await RoomService.getInstance().getRoomByHotelId(
         req.params.hotel_id,
         room_type as string,
-        is_accepted_bool as boolean | undefined,
-        is_booked_bool as boolean | undefined
+        is_accepted_bool,
+        is_booked_bool
       );
       res.status(200).json({ data: rooms });
     } catch (error) {
