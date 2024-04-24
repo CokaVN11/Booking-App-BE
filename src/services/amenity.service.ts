@@ -56,4 +56,17 @@ export class AmenityService {
         return amenity;
     }
 
+    checkListAmenity = async (amenities_ids: string[]) => {
+        try {
+            const amenities = await AmenityModel.find({ _id: { $in: amenities_ids } });
+            if (amenities.length != amenities_ids.length) {
+                return false;
+            }
+            return true;
+        } catch (error) {
+            const _error = error as Error;
+            throw new Error(_error.message);
+        }
+    }
+
 }

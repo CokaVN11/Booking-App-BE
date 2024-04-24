@@ -37,7 +37,11 @@ moderatorRoute.put("/room_type/:id", Controller.RoomTypeController.getInstance()
 moderatorRoute.delete("/room_type/:id", Controller.RoomTypeController.getInstance().deleteRoomType);
 
 // Room
+moderatorRoute.get("/room", Controller.RoomController.getInstance().getAllRoom);
+moderatorRoute.get("/room/:hotel_id", Controller.RoomController.getInstance().getRoomByHotelId);
 moderatorRoute.post("/room", Controller.RoomController.getInstance().addRoom);
+moderatorRoute.put("/room/:id", Controller.RoomController.getInstance().updateRoom);
+moderatorRoute.delete("/room/:id", Controller.RoomController.getInstance().deleteRoom);
 
 // Booking
 moderatorRoute.get("/booking/:hotel", Controller.BookingController.getInstance().getBookingOfHotel);
