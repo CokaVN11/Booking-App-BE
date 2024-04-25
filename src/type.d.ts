@@ -6,7 +6,7 @@ type Account = {
   bank_number: string;
   wallet: number;
   phone: string;
-  fullname: string;
+  fullname: string | null;
   hotel_name: string | null;
   hotel_address: string | null;
   description: string | null;

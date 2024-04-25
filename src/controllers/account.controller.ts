@@ -18,9 +18,51 @@ export class AccountController {
 
   register = async (req: Request, res: Response) => {
     try {
-      const { username, email, password, role, bank_number, wallet, phone, fullname, hotel_name, hotel_address, description, image } = req.body;
-      const user = await AccountService.getInstance().addAccount({ username, email, password, role, bank_number, wallet, phone, fullname, hotel_name, hotel_address, description, image });
-      res.status(200).json(user);
+      const role = req.body.role || "";
+      
+      if (role !== "customer" && role !== "moderator") {
+        throw new Error("Role must be customer or moderator");
+      }
+
+      let result;
+
+      if (role === "customer") {
+        const { username, password, fullname, role } = req.body;
+
+        result = await AccountService.getInstance().addAccount({ 
+          username, 
+          email: "none@gmail.com", 
+          password, 
+          role, 
+          bank_number: "", 
+          wallet: 0, 
+          phone: "", 
+          fullname, 
+          hotel_name: null, 
+          hotel_address: null, 
+          description: null, 
+          image: null 
+        });
+      } else {
+        const { username, password, hotel_name, hotel_address, description, role } = req.body;
+
+        result = await AccountService.getInstance().addAccount({ 
+          username, 
+          email: "none@gmail.com", 
+          password, 
+          role, 
+          bank_number: "", 
+          wallet: 0, 
+          phone: "", 
+          fullname: null, 
+          hotel_name, 
+          hotel_address, 
+          description, 
+          image: null
+        });
+      }
+      
+      res.status(200).json(result);
     } catch (error) {
       const _error = error as Error;
       res.status(400).json({ message: _error.message });

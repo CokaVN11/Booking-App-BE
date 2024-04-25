@@ -29,7 +29,39 @@ export class AccountService {
     }
 
     user.password = await this.hashPassword(user.password);
-    const account = new AccountModel(user);
+
+    let account;
+
+    if (user.role === "customer") {
+      account = new AccountModel({ 
+        username: user.username, 
+        email: user.email, 
+        password: user.password, 
+        role: user.role, 
+        bank_number: user.bank_number, 
+        wallet: user.wallet, 
+        phone: user.phone, 
+        fullname: user.fullname,
+        image: user.image
+       });
+    } else {
+      account = new AccountModel({ 
+        username: user.username, 
+        email: user.email, 
+        password: user.password, 
+        role: user.role, 
+        bank_number: 
+        user.bank_number, 
+        wallet: user.wallet, 
+        phone: user.phone, 
+        hotel_name: user.hotel_name, 
+        hotel_address: user.hotel_address, 
+        description: user.description, 
+        image: user.image });
+    }
+
+    console.log(account);
+    
     try {
       await account.save();
       return account;

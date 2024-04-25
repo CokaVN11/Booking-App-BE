@@ -13,7 +13,7 @@ const notificationSchema = new Schema({
     },
     for: {
         type: String,
-        enum: ['hotelier', 'customer'],
+        enum: ['moderator', 'customer'],
     },
     title: {
         type: String,
