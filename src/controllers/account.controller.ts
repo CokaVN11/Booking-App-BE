@@ -56,7 +56,7 @@ export class AccountController {
   update = async (req: Request, res: Response) => {
     try {
       const { username, email, password, role, bank_number, wallet, phone, fullname, hotel_name, hotel_address, description, image } = req.body;
-      
+
       const user = await AccountService.getInstance().updateAccount({ username, email, password, role, bank_number, wallet, phone, fullname, hotel_name, hotel_address, description, image });
       res.status(200).json(user);
     } catch (error) {
@@ -64,4 +64,15 @@ export class AccountController {
       res.status(400).json({ message: _error.message });
     }
   }
+
+  delete = async (req: Request, res: Response) => {
+    try {
+      const account_id = req.body._id;
+      const user = await AccountService.getInstance().deleteAccount(account_id);
+      res.status(200).json(user);
+    } catch (error) {
+      const _error = error as Error;
+      res.status(400).json({ message: _error.message });
+    }
+  };
 }
