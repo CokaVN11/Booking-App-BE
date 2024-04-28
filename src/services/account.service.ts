@@ -60,7 +60,7 @@ export class AccountService {
         image: user.image });
     }
 
-    console.log(account);
+    // console.log(account);
     
     try {
       await account.save();

@@ -18,6 +18,8 @@ export class AccountController {
 
   register = async (req: Request, res: Response) => {
     try {
+      console.log(req.body);
+      
       const role = req.body.role || "";
       
       if (role !== "customer" && role !== "moderator") {
@@ -62,7 +64,7 @@ export class AccountController {
         });
       }
       
-      res.status(200).json(result);
+      res.status(200).json({ message: "Register successfully", data: result });
     } catch (error) {
       const _error = error as Error;
       res.status(400).json({ message: _error.message });
