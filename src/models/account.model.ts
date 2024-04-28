@@ -19,7 +19,7 @@ const accountSchema = new Schema({
   role: {
     type: String,
     required: true,
-    enum: ["customer", "hotelier"]
+    enum: ["customer", "moderator"]
   },
   bank_number: String,
   wallet: {
@@ -28,7 +28,7 @@ const accountSchema = new Schema({
   },
   phone: String,
   fullname: String,
-  // only hotelier
+  // only moderator
   hotel_name: String,
   hotel_address: String,
   description: String,

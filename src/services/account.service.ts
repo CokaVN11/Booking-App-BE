@@ -59,8 +59,6 @@ export class AccountService {
       });
     }
 
-    console.log(account);
-
     try {
       await account.save();
       return account;
