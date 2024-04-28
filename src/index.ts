@@ -1,19 +1,24 @@
-import 'module-alias/register';
+import "module-alias/register";
 import "dotenv/config";
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import cors from 'cors';
-import logger from 'morgan';
-import passport from 'passport';
-import passportConfig from './config/passport';
-import session from 'express-session';
-import { AuthMiddleware } from '@middlewares';
+import cors from "cors";
+import logger from "morgan";
+import passport from "passport";
+import passportConfig from "./config/passport";
+import session from "express-session";
+import { AuthMiddleware } from "@middlewares";
 
 // routes
-import { authRoute, bookingRoute, customerRoute, moderatorRoute } from "@routes";
+import {
+  authRoute,
+  bookingRoute,
+  customerRoute,
+  moderatorRoute,
+} from "@routes";
 
-dotenv.config({ path: __dirname + '/.env' });
+dotenv.config({ path: __dirname + "/.env" });
 
 const app = express();
 
@@ -24,7 +29,7 @@ app.use(
     secret: process.env.PASSPORT_SECRET || "default-secret",
     resave: false,
     saveUninitialized: true,
-  }),
+  })
 );
 app.use(passport.initialize());
 app.use(passport.session());
@@ -33,25 +38,24 @@ app.use(passport.session());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
-app.use(logger('dev'));
-
+app.use(logger("dev"));
 
 const router = express.Router();
 app.use(router);
 
-router.get('/', (_req, res) => {
-  console.log('Welcome to the JoyServe API');
-  res.send('Welcome to the JoyServe API');
+router.get("/", (_req, res) => {
+  console.log("Welcome to the JoyServe API");
+  res.send("Welcome to the JoyServe API");
 });
 
-router.use('/auth', authRoute);
+router.use("/auth", authRoute);
 
 router.use(AuthMiddleware.getInstance().authenticate);
 router.use(AuthMiddleware.getInstance().authorize);
 
-router.use('/moderator', moderatorRoute);
-router.use('/customer', customerRoute);
-router.use('/booking', bookingRoute);
+router.use("/moderator", moderatorRoute);
+router.use("/customer", customerRoute);
+router.use("/booking", bookingRoute);
 
 mongoose
   .connect(process.env.MONGO_URL as string)
