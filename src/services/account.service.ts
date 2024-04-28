@@ -59,8 +59,6 @@ export class AccountService {
         description: user.description, 
         image: user.image });
     }
-
-    // console.log(account);
     
     try {
       await account.save();
