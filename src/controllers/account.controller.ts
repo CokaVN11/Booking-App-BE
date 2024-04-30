@@ -18,7 +18,6 @@ export class AccountController {
 
   register = async (req: Request, res: Response) => {
     try {
-      console.log(req.body);
       
       const role = req.body.role || "";
       
@@ -86,14 +85,14 @@ export class AccountController {
         user.password = "*****";
         const token = jwt.sign(
           { user },
-          process.env.TOKEN_SECRET || "default_jwt_secret",
-          { expiresIn: "1h" },
+          process.env.TOKEN_SECRET ?? "default_jwt_secret",
+          { expiresIn: "10d" },
         );
 
         return res.status(200).json({ message: "Login successfully", data: { token, account: user } });
       });
 
-      return;
+      return res.status(500).json({ message: "Something went wrong" });
     })(req, res);
   };
 
@@ -114,6 +113,34 @@ export class AccountController {
       const account_id = req.body._id;
       const user = await AccountService.getInstance().deleteAccount(account_id);
       res.status(200).json(user);
+    } catch (error) {
+      const _error = error as Error;
+      res.status(400).json({ message: _error.message });
+    }
+  };
+
+  getModerators = async (_: Request, res: Response) => {
+    try {
+      const moderators = await AccountService.getInstance().getModerators();
+
+      const data = moderators.map((moderator) => {
+        return {
+          _id: moderator._id,
+          username: moderator.username,
+          email: moderator.email,
+          role: moderator.role,
+          bankNumber: moderator.bank_number,
+          wallet: moderator.wallet,
+          phone: moderator.phone,
+          fullname: moderator.fullname,
+          hotelName: moderator.hotel_name,
+          hotelAddress: moderator.hotel_address,
+          description: moderator.description,
+          image: moderator.image,
+        };
+      });
+
+      res.status(200).json({ data });
     } catch (error) {
       const _error = error as Error;
       res.status(400).json({ message: _error.message });

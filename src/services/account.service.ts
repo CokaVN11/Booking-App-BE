@@ -1,5 +1,6 @@
 import { AccountModel } from "@models";
 import crypto from "crypto";
+import mongoose from "mongoose";
 
 export class AccountService {
   private static instance: AccountService | null = null;
@@ -93,7 +94,6 @@ export class AccountService {
 
   updateAccount = async (user: Account) => {
     const account = await AccountModel.findOne({ username: user.username });
-    console.log(user.username, account);
     if (!account) {
       throw new Error("Account not found");
     }
@@ -113,22 +113,31 @@ export class AccountService {
 
   // check whether the hotel_id exist
   checkHotelId = async (hotel_id: string) => {
-    const account = await AccountModel.findOne({ _id: hotel_id });
+    const account = await AccountModel.findById(hotel_id);
     if (!account) {
       return false;
     }
     return true;
   };
 
-  deleteAccount = async (account_id: String) => {
+  deleteAccount = async (account_id: string) => {
     const account = await AccountModel.findById(account_id);
-    console.log(account_id + " id");
     if (!account) {
       throw new Error("Account not found");
     }
     try {
-      await AccountModel.deleteOne({ _id: account_id });
+      await AccountModel.findByIdAndDelete(account_id);
       return account;
+    } catch (error) {
+      const _error = error as Error;
+      throw new Error(_error.message);
+    }
+  };
+
+  getModerators = async () => {
+    try {
+      const moderators = await AccountModel.find({ role: "moderator" });
+      return moderators;
     } catch (error) {
       const _error = error as Error;
       throw new Error(_error.message);

@@ -102,4 +102,16 @@ export class RoomController {
       res.status(400).json({ message: _error.message });
     }
   }
+
+  // get price range of room
+  getPriceRange = async (req: Request, res: Response) => {
+    try {
+      const { hotel_id } = req.params;
+      const priceRange = await RoomService.getInstance().getPriceRange(hotel_id);
+      res.json({ data: priceRange });
+    } catch (error) {
+      const _error = error as Error;
+      res.status(500).json({ message: _error.message });
+    }
+  };
 }
