@@ -93,7 +93,6 @@ export class AccountService {
 
   updateAccount = async (user: Account) => {
     const account = await AccountModel.findOne({ username: user.username });
-    console.log(user.username, account);
     if (!account) {
       throw new Error("Account not found");
     }
@@ -122,7 +121,6 @@ export class AccountService {
 
   deleteAccount = async (account_id: String) => {
     const account = await AccountModel.findById(account_id);
-    console.log(account_id + " id");
     if (!account) {
       throw new Error("Account not found");
     }

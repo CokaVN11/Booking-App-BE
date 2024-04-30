@@ -194,7 +194,6 @@ export class RoomService {
     };
 
     getPriceRange = async (hotel_id: string) => {
-        console.log(hotel_id);
         try {
             const minPricePipeline = [
                 {

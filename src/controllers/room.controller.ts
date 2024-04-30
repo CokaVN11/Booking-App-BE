@@ -108,7 +108,6 @@ export class RoomController {
     try {
       const { hotel_id } = req.params;
       const priceRange = await RoomService.getInstance().getPriceRange(hotel_id);
-      console.log(priceRange);
       res.json({ data: priceRange });
     } catch (error) {
       const _error = error as Error;

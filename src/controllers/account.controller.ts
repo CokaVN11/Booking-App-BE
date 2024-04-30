@@ -18,7 +18,6 @@ export class AccountController {
 
   register = async (req: Request, res: Response) => {
     try {
-      console.log(req.body);
       
       const role = req.body.role || "";
       
