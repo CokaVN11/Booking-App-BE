@@ -1,4 +1,5 @@
 import { RatingModel } from "@models";
+import mongoose from "mongoose";
 
 export class RatingService {
     private static instance: RatingService | null = null;
@@ -14,7 +15,7 @@ export class RatingService {
     }
 
     getAverageRating = async (hotel_id: string) => {
-        const ratings = await RatingModel.find({ hotel_id });
+        const ratings = await RatingModel.find({ hotel: new mongoose.Types.ObjectId(hotel_id) });
         if (!ratings) {
             throw new Error("Rating not found");
         }
