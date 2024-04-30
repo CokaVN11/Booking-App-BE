@@ -3,6 +3,11 @@ import { Router } from "express";
 
 export const customerRoute = Router();
 
+customerRoute.get(
+  "/hotel/all",
+  Controller.AccountController.getInstance().getModerators
+);
+
 customerRoute.post(
   "/booking",
   Controller.BookingController.getInstance().addBooking

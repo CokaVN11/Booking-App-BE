@@ -87,7 +87,7 @@ export class AccountController {
         const token = jwt.sign(
           { user },
           process.env.TOKEN_SECRET || "default_jwt_secret",
-          { expiresIn: "1h" },
+          { expiresIn: "10d" },
         );
 
         return res.status(200).json({ message: "Login successfully", data: { token, account: user } });
@@ -114,6 +114,16 @@ export class AccountController {
       const account_id = req.body._id;
       const user = await AccountService.getInstance().deleteAccount(account_id);
       res.status(200).json(user);
+    } catch (error) {
+      const _error = error as Error;
+      res.status(400).json({ message: _error.message });
+    }
+  };
+
+  getModerators = async (_: Request, res: Response) => {
+    try {
+      const moderators = await AccountService.getInstance().getModerators();
+      res.status(200).json({ data: moderators });
     } catch (error) {
       const _error = error as Error;
       res.status(400).json({ message: _error.message });

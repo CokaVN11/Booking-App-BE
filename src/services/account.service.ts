@@ -134,4 +134,14 @@ export class AccountService {
       throw new Error(_error.message);
     }
   };
+
+  getModerators = async () => {
+    try {
+      const moderators = await AccountModel.find({ role: "moderator" });
+      return moderators;
+    } catch (error) {
+      const _error = error as Error;
+      throw new Error(_error.message);
+    }
+  };
 }
