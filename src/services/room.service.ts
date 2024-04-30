@@ -90,6 +90,26 @@ export class RoomService {
         }
     };
 
+    validateRoomData = async (room_data: Room) => {
+        const [isHotelExist, isRoomTypeExist, isAmenitiesExist] = await Promise.all([
+            AccountService.getInstance().checkHotelId(room_data.hotel),
+            RoomTypeService.getInstance().checkRoomTypeId(room_data.room_type),
+            AmenityService.getInstance().checkListAmenity(room_data.amenities_ids),
+        ]);
+
+        if (!isHotelExist) {
+            throw new Error("Hotel not found");
+        }
+
+        if (!isRoomTypeExist) {
+            throw new Error("Room type not found");
+        }
+
+        if (!isAmenitiesExist) {
+            throw new Error("Some of the amenities not found");
+        }
+    }
+
     addRoom = async (room_data: Room) => {
         // Check exist
         const roomExist = await RoomModel.findOne({
@@ -100,30 +120,7 @@ export class RoomService {
             throw new Error("Room already exist");
         }
 
-        // Check hotel
-        const isHotelExist = await AccountService.getInstance().checkHotelId(
-            room_data.hotel
-        );
-        if (!isHotelExist) {
-            throw new Error("Hotel not found");
-        }
-
-        // Check room_type
-        const isRoomTypeExist = await RoomTypeService.getInstance().checkRoomTypeId(
-            room_data.room_type
-        );
-        if (!isRoomTypeExist) {
-            throw new Error("Room type not found");
-        }
-
-        // Check amenities
-        const isAmenitiesExist =
-            await AmenityService.getInstance().checkListAmenity(
-                room_data.amenities_ids
-            );
-        if (!isAmenitiesExist) {
-            throw new Error("Some of the amenities not found");
-        }
+        await this.validateRoomData(room_data);
 
         try {
             const room = new RoomModel(room_data);

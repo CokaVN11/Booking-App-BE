@@ -22,11 +22,7 @@ export class RatingService {
             return 0;
         }
         
-        let total = 0;
-
-        ratings.forEach((rating) => {
-            total += rating.star;
-        });
+        const total = ratings.reduce((acc, rating) => acc + rating.star, 0);
         return total / ratings.length;
     };
 }
