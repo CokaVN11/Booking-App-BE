@@ -123,7 +123,25 @@ export class AccountController {
   getModerators = async (_: Request, res: Response) => {
     try {
       const moderators = await AccountService.getInstance().getModerators();
-      res.status(200).json({ data: moderators });
+
+      const data = moderators.map((moderator) => {
+        return {
+          _id: moderator._id,
+          username: moderator.username,
+          email: moderator.email,
+          role: moderator.role,
+          bankNumber: moderator.bank_number,
+          wallet: moderator.wallet,
+          phone: moderator.phone,
+          fullname: moderator.fullname,
+          hotelName: moderator.hotel_name,
+          hotelAddress: moderator.hotel_address,
+          description: moderator.description,
+          image: moderator.image,
+        };
+      });
+
+      res.status(200).json({ data });
     } catch (error) {
       const _error = error as Error;
       res.status(400).json({ message: _error.message });
