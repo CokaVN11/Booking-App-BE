@@ -39,8 +39,18 @@ export class OTPService {
     }
   };
 
+  deleteOTP = async (email: string) => {
+    try {
+      await OTPModel.deleteMany({ email });
+    } catch (error) {
+      const _error = error as Error;
+      throw new Error(`Error deleting OTP: ${_error.message}`);
+    }
+  }
+
   sendOTP = async (email: string, otp: string) => {
     try {
+      await this.deleteOTP(email);
       await this.createOTP(email, otp);
       await EmailService.getInstance().sendOTP(email, otp);
     } catch (error) {
