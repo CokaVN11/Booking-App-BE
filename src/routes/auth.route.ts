@@ -14,3 +14,5 @@ authRoute.post("/login", AccountController.getInstance().login);
 authRoute.put("/update", AccountController.getInstance().update);
 
 authRoute.delete("/delete", AccountController.getInstance().delete);
+
+authRoute.post("/forgot-password", AccountController.getInstance().forgotPassword);

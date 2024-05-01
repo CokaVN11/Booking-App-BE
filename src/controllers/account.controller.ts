@@ -1,12 +1,12 @@
-import { Request, Response } from 'express';
-import { AccountService } from '@services';
+import { Request, Response } from "express";
+import { AccountService, OTPService } from "@services";
 import jwt from "jsonwebtoken";
-import passport from 'passport';
+import passport from "passport";
 
 export class AccountController {
   private static instance: AccountController | null = null;
 
-  private constructor() { }
+  private constructor() {}
 
   static getInstance(): AccountController {
     if (!AccountController.instance) {
@@ -18,9 +18,8 @@ export class AccountController {
 
   register = async (req: Request, res: Response) => {
     try {
-      
       const role = req.body.role || "";
-      
+
       if (role !== "customer" && role !== "moderator") {
         throw new Error("Role must be customer or moderator");
       }
@@ -30,39 +29,46 @@ export class AccountController {
       if (role === "customer") {
         const { username, password, fullname, role } = req.body;
 
-        result = await AccountService.getInstance().addAccount({ 
-          username, 
-          email: "none@gmail.com", 
-          password, 
-          role, 
-          bank_number: "", 
-          wallet: 0, 
-          phone: "", 
-          fullname, 
-          hotel_name: null, 
-          hotel_address: null, 
-          description: null, 
-          image: null 
+        result = await AccountService.getInstance().addAccount({
+          username,
+          email: "none@gmail.com",
+          password,
+          role,
+          bank_number: "",
+          wallet: 0,
+          phone: "",
+          fullname,
+          hotel_name: null,
+          hotel_address: null,
+          description: null,
+          image: null,
         });
       } else {
-        const { username, password, hotel_name, hotel_address, description, role } = req.body;
+        const {
+          username,
+          password,
+          hotel_name,
+          hotel_address,
+          description,
+          role,
+        } = req.body;
 
-        result = await AccountService.getInstance().addAccount({ 
-          username, 
-          email: "none@gmail.com", 
-          password, 
-          role, 
-          bank_number: "", 
-          wallet: 0, 
-          phone: "", 
-          fullname: null, 
-          hotel_name, 
-          hotel_address, 
-          description, 
-          image: null
+        result = await AccountService.getInstance().addAccount({
+          username,
+          email: "none@gmail.com",
+          password,
+          role,
+          bank_number: "",
+          wallet: 0,
+          phone: "",
+          fullname: null,
+          hotel_name,
+          hotel_address,
+          description,
+          image: null,
         });
       }
-      
+
       res.status(200).json({ message: "Register successfully", data: result });
     } catch (error) {
       const _error = error as Error;
@@ -78,35 +84,68 @@ export class AccountController {
       if (!user) {
         return res.status(401).json({ message: info.message });
       }
-      req.logIn(user, (err) => {
-        if (err) {
-          return res.status(500).json({ message: err.message });
-        }
-        user.password = "*****";
-        const token = jwt.sign(
-          { user },
-          process.env.TOKEN_SECRET ?? "default_jwt_secret",
-          { expiresIn: "10d" },
-        );
+      try {
+        req.logIn(user, (err) => {
+          if (err) {
+            return res.status(500).json({ message: err.message });
+          }
+          user.password = "*****";
+          const token = jwt.sign(
+            { user },
+            process.env.TOKEN_SECRET ?? "default_jwt_secret",
+            { expiresIn: "10d" }
+          );
 
-        return res.status(200).json({ message: "Login successfully", data: { token, account: user } });
-      });
-
-      return res.status(500).json({ message: "Something went wrong" });
+          return res
+            .status(200)
+            .json({
+              message: "Login successfully",
+              data: { token, account: user },
+            });
+        });
+      } catch (error) {
+        return res.status(500).json({ message: "Something went wrong" });
+      }
     })(req, res);
   };
 
   update = async (req: Request, res: Response) => {
     try {
-      const { username, email, password, role, bank_number, wallet, phone, fullname, hotel_name, hotel_address, description, image } = req.body;
+      const {
+        username,
+        email,
+        password,
+        role,
+        bank_number,
+        wallet,
+        phone,
+        fullname,
+        hotel_name,
+        hotel_address,
+        description,
+        image,
+      } = req.body;
 
-      const user = await AccountService.getInstance().updateAccount({ username, email, password, role, bank_number, wallet, phone, fullname, hotel_name, hotel_address, description, image });
+      const user = await AccountService.getInstance().updateAccount({
+        username,
+        email,
+        password,
+        role,
+        bank_number,
+        wallet,
+        phone,
+        fullname,
+        hotel_name,
+        hotel_address,
+        description,
+        image,
+      });
       res.status(200).json(user);
     } catch (error) {
       const _error = error as Error;
       res.status(400).json({ message: _error.message });
     }
-  }
+  };
 
   delete = async (req: Request, res: Response) => {
     try {
@@ -141,6 +180,26 @@ export class AccountController {
       });
 
       res.status(200).json({ data });
+    } catch (error) {
+      const _error = error as Error;
+      res.status(400).json({ message: _error.message });
+    }
+  };
+
+  forgotPassword = async (req: Request, res: Response) => {
+    try {
+      const username = req.body.username;
+      const user = await AccountService.getInstance().getAccountByUsername(
+        username
+      );
+
+      if (!user) {
+        res.status(400).json({ message: "Username does not exist" });
+      } else {
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        await OTPService.getInstance().sendOTP(user.email, otp);
+        res.status(200).json({ message: "OTP has been sent" });
+      }
     } catch (error) {
       const _error = error as Error;
       res.status(400).json({ message: _error.message });
