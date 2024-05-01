@@ -142,4 +142,22 @@ export class AccountService {
       throw new Error(_error.message);
     }
   };
+
+  updatePassword = async (username: string, password: string) => {
+    try {
+      const account = await AccountModel.findOneAndUpdate(
+        { username },
+        { password: await this.hashPassword(password) }
+      );
+
+      if (!account) {
+        throw new Error("Account not found");
+      }
+
+      return account;
+    } catch (error) {
+      const _error = error as Error;
+      throw new Error(_error.message);
+    }
+  };
 }

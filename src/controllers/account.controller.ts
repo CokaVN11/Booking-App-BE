@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { AccountService, OTPService } from "@services";
 import jwt from "jsonwebtoken";
 import passport from "passport";
+import { AccountModel } from "@/models";
 
 export class AccountController {
   private static instance: AccountController | null = null;
@@ -205,4 +206,51 @@ export class AccountController {
       res.status(400).json({ message: _error.message });
     }
   };
+
+  verifyOTP = async (req: Request, res: Response) => {
+    try {
+      const username = req.body.username;
+      const otp = req.body.otp;
+
+      const user = await AccountService.getInstance().getAccountByUsername(
+        username
+      );
+
+      if (!user) {
+        res.status(400).json({ message: "Username does not exist" });
+      } else {
+        const otpData = await OTPService.getInstance().getOTP(user.email);
+
+        if (otpData && otpData.otp === otp) {
+          res.status(200).json({ message: "OTP is valid" });
+        } else {
+          res.status(400).json({ message: "Invalid OTP" });
+        }
+      }
+    } catch (error) {
+      const _error = error as Error;
+      res.status(400).json({ message: _error.message });
+    }
+  };
+
+  resetPassword = async (req: Request, res: Response) => {
+    try {
+      const username = req.body.username;
+      const password = req.body.password;
+
+      const user = await AccountService.getInstance().getAccountByUsername(
+        username
+      );
+
+      if (!user) {
+        res.status(400).json({ message: "Username does not exist" });
+      } else {
+        await AccountService.getInstance().updatePassword(username, password);
+        res.status(200).json({ message: "Password has been updated" });
+      }
+    } catch (error) {
+      const _error = error as Error;
+      res.status(400).json({ message: _error.message });
+    }
+  }
 }
