@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
 import { AccountService, OTPService } from "@services";
+import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import passport from "passport";
-import { AccountModel } from "@/models";
+import otpGenerator from "otp-generator";
 
 export class AccountController {
   private static instance: AccountController | null = null;
@@ -197,7 +197,7 @@ export class AccountController {
       if (!user) {
         res.status(400).json({ message: "Username does not exist" });
       } else {
-        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const otp = otpGenerator.generate(6, { digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
         await OTPService.getInstance().sendOTP(user.email, otp);
         res.status(200).json({ message: "OTP has been sent" });
       }
