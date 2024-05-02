@@ -114,4 +114,14 @@ export class RoomController {
       res.status(500).json({ message: _error.message });
     }
   };
+
+  getAmenitiesByHotelId = async (req: Request, res: Response) => {
+    try {
+      const amenities = await RoomService.getInstance().getAmenitiesByHotelId(req.params.hotel_id);
+      res.json({ data: amenities });
+    } catch (error) {
+      const _error = error as Error;
+      res.status(500).json({ message: _error.message });
+    }
+  };
 }

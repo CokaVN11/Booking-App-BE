@@ -41,10 +41,25 @@ export class RoomService {
                 ...(is_accepted != undefined && { is_accepted: is_accepted }),
                 ...(is_booked != undefined && { is_booked: is_booked }),
             });
+
             if (rooms.length === 0) {
                 throw new Error("No rooms found");
             }
-            return rooms;
+
+            const data = rooms.map((room) => {
+                return {
+                    _id: room._id,
+                    name: room.name,
+                    hotel: room.hotel,
+                    roomType: room.room_type,
+                    amenitiesIds: room.amenities_ids,
+                    isAccepted: room.is_accepted,
+                    isBooked: room.is_booked,
+                    image: room.image,
+                };
+            });
+
+            return data;
         } catch (error) {
             const _error = error as Error;
             throw new Error(_error.message);
@@ -247,6 +262,30 @@ export class RoomService {
                 min: minPrice[0]?.minPrice || 0,
                 max: maxPrice[0]?.maxPrice || 0,
             };
+        } catch (error) {
+            const _error = error as Error;
+            throw new Error(_error.message);
+        }
+    };
+
+    getAmenitiesByHotelId = async (hotel_id: string) => {
+        try {
+            const rooms = await RoomModel.find({ hotel: new mongoose.Types.ObjectId(hotel_id) });
+            if (rooms.length === 0) {
+                throw new Error("No rooms found");
+            }
+            
+            let amenities: string[] = [];
+
+            rooms.forEach((room) => {
+                amenities = amenities.concat(room.amenities_ids.toString().split(","));
+            });
+
+            const uniqueAmenities = Array.from(new Set(amenities));
+
+            const data = await AmenityService.getInstance().getListAmenity(uniqueAmenities);
+
+            return data;
         } catch (error) {
             const _error = error as Error;
             throw new Error(_error.message);

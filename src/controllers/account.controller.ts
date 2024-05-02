@@ -123,24 +123,19 @@ export class AccountController {
     try {
       const moderators = await AccountService.getInstance().getModerators();
 
-      const data = moderators.map((moderator) => {
-        return {
-          _id: moderator._id,
-          username: moderator.username,
-          email: moderator.email,
-          role: moderator.role,
-          bankNumber: moderator.bank_number,
-          wallet: moderator.wallet,
-          phone: moderator.phone,
-          fullname: moderator.fullname,
-          hotelName: moderator.hotel_name,
-          hotelAddress: moderator.hotel_address,
-          description: moderator.description,
-          image: moderator.image,
-        };
-      });
+      res.status(200).json({ data: moderators });
+    } catch (error) {
+      const _error = error as Error;
+      res.status(400).json({ message: _error.message });
+    }
+  };
 
-      res.status(200).json({ data });
+  getModerator = async (req: Request, res: Response) => {
+    try {
+      const hotel_id = req.params.hotel_id;
+      const moderator = await AccountService.getInstance().getModerator(hotel_id);
+
+      res.status(200).json({ data: moderator });
     } catch (error) {
       const _error = error as Error;
       res.status(400).json({ message: _error.message });
