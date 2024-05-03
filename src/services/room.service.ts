@@ -311,6 +311,7 @@ export class RoomService {
                 },
                 {
                     $project: {
+                        _id: 1,
                         name: 1,
                         room_type: "$roomType.name",
                         is_accepted: 1,
@@ -332,6 +333,7 @@ export class RoomService {
 
             data = data.map((room) => {
                 return {
+                    _id: room._id,
                     name: room.name,
                     roomType: room.room_type,
                     isAccepted: room.is_accepted,
