@@ -73,14 +73,14 @@ export class AccountController {
   login = async (req: Request, res: Response) => {
     passport.authenticate("local", (err: Error, user: any, info: any) => {
       if (err) {
-        return res.status(500).json({ message: err.message });
+        res.status(500).json({ message: err.message });
       }
       if (!user) {
-        return res.status(401).json({ message: info.message });
+        res.status(401).json({ message: info.message });
       }
       req.logIn(user, (err) => {
         if (err) {
-          return res.status(500).json({ message: err.message });
+          res.status(500).json({ message: err.message });
         }
         user.password = "*****";
         const token = jwt.sign(
@@ -89,10 +89,8 @@ export class AccountController {
           { expiresIn: "10d" },
         );
 
-        return res.status(200).json({ message: "Login successfully", data: { token, account: user } });
+        res.status(200).json({ message: "Login successfully", data: { token, account: user } });
       });
-
-      return res.status(500).json({ message: "Something went wrong" });
     })(req, res);
   };
 
