@@ -28,16 +28,16 @@ export class AccountController {
       let result;
 
       if (role === "customer") {
-        const { username, password, fullname, role } = req.body;
+        const { username, email, password, phone, fullname, role } = req.body;
 
         result = await AccountService.getInstance().addAccount({ 
           username, 
-          email: "none@gmail.com", 
+          email, 
           password, 
           role, 
-          bank_number: "", 
+          bank_number: "123123", 
           wallet: 0, 
-          phone: "", 
+          phone, 
           fullname, 
           hotel_name: null, 
           hotel_address: null, 
@@ -45,19 +45,19 @@ export class AccountController {
           image: null 
         });
       } else {
-        const { username, password, hotel_name, hotel_address, description, role } = req.body;
+        const { username, email, password, phone, fullname, hotelName, hotelAddress, description, role } = req.body;
 
         result = await AccountService.getInstance().addAccount({ 
           username, 
-          email: "none@gmail.com", 
+          email, 
           password, 
           role, 
-          bank_number: "", 
+          bank_number: "123123", 
           wallet: 0, 
-          phone: "", 
-          fullname: null, 
-          hotel_name, 
-          hotel_address, 
+          phone, 
+          fullname, 
+          hotel_name: hotelName, 
+          hotel_address: hotelAddress, 
           description, 
           image: null
         });
