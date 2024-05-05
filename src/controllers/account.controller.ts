@@ -103,63 +103,16 @@ export class AccountController {
           res.status(200).json({ message: "Login successfully", data: { token, account: user } });
         });
       }
-      try {
-        req.logIn(user, (err) => {
-          if (err) {
-            return res.status(500).json({ message: err.message });
-          }
-          user.password = "*****";
-          const token = jwt.sign(
-            { user },
-            process.env.TOKEN_SECRET ?? "default_jwt_secret",
-            { expiresIn: "10d" }
-          );
-
-          return res
-            .status(200)
-            .json({
-              message: "Login successfully",
-              data: { token, account: user },
-            });
-        });
-      } catch (error) {
-        return res.status(500).json({ message: "Something went wrong" });
-      }
     })(req, res);
   };
 
   update = async (req: Request, res: Response) => {
     try {
-      const {
-        username,
-        email,
-        password,
-        role,
-        bank_number,
-        wallet,
-        phone,
-        fullname,
-        hotel_name,
-        hotel_address,
-        description,
-        image,
-      } = req.body;
+      const accountId = req.params.accountId;
+      const updateUserInfo = req.body;
 
-      const user = await AccountService.getInstance().updateAccount({
-        username,
-        email,
-        password,
-        role,
-        bank_number,
-        wallet,
-        phone,
-        fullname,
-        hotel_name,
-        hotel_address,
-        description,
-        image,
-      });
-      res.status(200).json(user);
+      const updatedUser = await AccountService.getInstance().updateAccount(accountId, updateUserInfo);
+      res.status(200).json({ data: { user: updatedUser }, message: "Update successfully" });
     } catch (error) {
       const _error = error as Error;
       res.status(400).json({ message: _error.message });
@@ -263,6 +216,21 @@ export class AccountController {
         await AccountService.getInstance().updatePassword(username, password);
         res.status(200).json({ message: "Password has been updated" });
       }
+    } catch (error) {
+      const _error = error as Error;
+      res.status(400).json({ message: _error.message });
+    }
+  }
+  getProfile = async (req: Request, res: Response) => {
+    try {
+      const accountId = req.params.accountId;
+      const user = await AccountService.getInstance().getAccount(accountId);
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      res.status(200).json({data: {user: user}});
     } catch (error) {
       const _error = error as Error;
       res.status(400).json({ message: _error.message });

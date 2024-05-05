@@ -45,3 +45,13 @@ customerRoute.get(
   "/room/:hotel_id",
   Controller.RoomController.getInstance().getRoomByHotelId
 );
+
+customerRoute.get(
+  "/profile/:accountId",
+  Controller.AccountController.getInstance().getProfile
+)
+
+customerRoute.put(
+  "/profile/:accountId",
+  Controller.AccountController.getInstance().update
+)
