@@ -53,6 +53,7 @@ export class AccountService {
         bank_number: user.bank_number,
         wallet: user.wallet,
         phone: user.phone,
+        fullname: user.fullname,
         hotel_name: user.hotel_name,
         hotel_address: user.hotel_address,
         description: user.description,
@@ -85,12 +86,16 @@ export class AccountService {
     return `${buf.toString("hex")}.${salt}`;
   };
 
-  comparePassword = async (password: string, storedPassword: string) => {
+  comparePasswordWithHash = async (password: string, storedPassword: string) => {
     const [hashedPassword, salt] = storedPassword.split(".");
     const buf = Buffer.from(hashedPassword, "hex");
     const hashedPasswordBuf = crypto.scryptSync(password, salt, 64);
     return crypto.timingSafeEqual(buf, hashedPasswordBuf);
   };
+
+  comparePassword = async (password: string, storedPassword: string) => {
+    return password === storedPassword;
+  }
 
   updateAccount = async (user: Account) => {
     const account = await AccountModel.findOne({ username: user.username });
@@ -134,10 +139,71 @@ export class AccountService {
     }
   };
 
-  getModerators = async () => {
+  getModerators = async (start: number, num: number) => {
     try {
-      const moderators = await AccountModel.find({ role: "moderator" });
-      return moderators;
+      const moderators = await AccountModel.find({ role: "moderator" }).skip(start).limit(num);
+
+      const data = moderators.map((moderator) => {
+        return {
+          _id: moderator._id,
+          username: moderator.username,
+          email: moderator.email,
+          role: moderator.role,
+          bankNumber: moderator.bank_number,
+          wallet: moderator.wallet,
+          phone: moderator.phone,
+          fullname: moderator.fullname,
+          hotelName: moderator.hotel_name,
+          hotelAddress: moderator.hotel_address,
+          description: moderator.description,
+          image: moderator.image,
+        };
+      });
+
+      return data;
+    } catch (error) {
+      const _error = error as Error;
+      throw new Error(_error.message);
+    }
+  };
+
+  getModerator = async (hotel_id: string) => {
+    if (!mongoose.Types.ObjectId.isValid(hotel_id)) {
+      throw new Error("Invalid hotel_id");
+    }
+
+    const moderator = await AccountModel.findById(hotel_id);
+    if (!moderator) {
+      throw new Error("Moderator not found");
+    }
+
+    return {
+      _id: moderator._id,
+      username: moderator.username,
+      email: moderator.email,
+      role: moderator.role,
+      bankNumber: moderator.bank_number,
+      wallet: moderator.wallet,
+      phone: moderator.phone,
+      fullname: moderator.fullname,
+      hotelName: moderator.hotel_name,
+      hotelAddress: moderator.hotel_address,
+      description: moderator.description,
+      image: moderator.image,
+    };
+  }
+  updatePassword = async (username: string, password: string) => {
+    try {
+      const account = await AccountModel.findOneAndUpdate(
+        { username },
+        { password: await this.hashPassword(password) }
+      );
+
+      if (!account) {
+        throw new Error("Account not found");
+      }
+
+      return account;
     } catch (error) {
       const _error = error as Error;
       throw new Error(_error.message);

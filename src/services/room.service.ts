@@ -41,10 +41,25 @@ export class RoomService {
                 ...(is_accepted != undefined && { is_accepted: is_accepted }),
                 ...(is_booked != undefined && { is_booked: is_booked }),
             });
+
             if (rooms.length === 0) {
                 throw new Error("No rooms found");
             }
-            return rooms;
+
+            const data = rooms.map((room) => {
+                return {
+                    _id: room._id,
+                    name: room.name,
+                    hotel: room.hotel,
+                    roomType: room.room_type,
+                    amenitiesIds: room.amenities_ids,
+                    isAccepted: room.is_accepted,
+                    isBooked: room.is_booked,
+                    image: room.image,
+                };
+            });
+
+            return data;
         } catch (error) {
             const _error = error as Error;
             throw new Error(_error.message);
@@ -247,6 +262,95 @@ export class RoomService {
                 min: minPrice[0]?.minPrice || 0,
                 max: maxPrice[0]?.maxPrice || 0,
             };
+        } catch (error) {
+            const _error = error as Error;
+            throw new Error(_error.message);
+        }
+    };
+
+    getAmenitiesByHotelId = async (hotel_id: string) => {
+        try {
+            const rooms = await RoomModel.find({ hotel: new mongoose.Types.ObjectId(hotel_id) });
+            if (rooms.length === 0) {
+                throw new Error("No rooms found");
+            }
+            
+            let amenities: string[] = [];
+
+            rooms.forEach((room) => {
+                amenities = amenities.concat(room.amenities_ids.toString().split(","));
+            });
+
+            const uniqueAmenities = Array.from(new Set(amenities));
+
+            const data = await AmenityService.getInstance().getListAmenity(uniqueAmenities);
+
+            return data;
+        } catch (error) {
+            const _error = error as Error;
+            throw new Error(_error.message);
+        }
+    };
+
+    getFullRoomDetailByHotelId = async (hotel_id: string) => {
+        try {
+            const pipeLine = [
+                {
+                    $match: { hotel: new mongoose.Types.ObjectId(hotel_id) },
+                },
+                {
+                    $lookup: {
+                        from: "roomtypes",
+                        localField: "room_type",
+                        foreignField: "_id",
+                        as: "roomType",
+                    },
+                },
+                {
+                    $unwind: "$roomType",
+                },
+                {
+                    $project: {
+                        _id: 1,
+                        name: 1,
+                        room_type: "$roomType.name",
+                        is_accepted: 1,
+                        is_booked: 1,
+                        image: 1,
+                        amenities_ids: 1,
+                        hotel: 1,
+                        description: "$roomType.description",
+                        price: "$roomType.price",
+                        guest: "$roomType.guest",
+                        bedroom: "$roomType.bedroom",
+                        bathroom: "$roomType.bathroom",
+                        area: "$roomType.area",
+                    },
+                },
+            ];
+
+            let data = await RoomModel.aggregate(pipeLine);
+
+            data = data.map((room) => {
+                return {
+                    _id: room._id,
+                    name: room.name,
+                    roomType: room.room_type,
+                    isAccepted: room.is_accepted,
+                    isBooked: room.is_booked,
+                    amenitiesIds: room.amenities_ids,
+                    image: room.image,
+                    hotel: room.hotel,
+                    description: room.description,
+                    price: room.price,
+                    guest: room.guest,
+                    bedroom: room.bedroom,
+                    bathroom: room.bathroom,
+                    area: room.area,
+                };
+            });
+
+            return data;
         } catch (error) {
             const _error = error as Error;
             throw new Error(_error.message);
