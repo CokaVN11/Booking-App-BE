@@ -103,28 +103,6 @@ export class AccountController {
           res.status(200).json({ message: "Login successfully", data: { token, account: user } });
         });
       }
-      try {
-        req.logIn(user, (err) => {
-          if (err) {
-            return res.status(500).json({ message: err.message });
-          }
-          user.password = "*****";
-          const token = jwt.sign(
-            { user },
-            process.env.TOKEN_SECRET ?? "default_jwt_secret",
-            { expiresIn: "10d" }
-          );
-
-          return res
-            .status(200)
-            .json({
-              message: "Login successfully",
-              data: { token, account: user },
-            });
-        });
-      } catch (error) {
-        return res.status(500).json({ message: "Something went wrong" });
-      }
     })(req, res);
   };
 
