@@ -84,24 +84,21 @@ export class AccountController {
       if (!user) {
         res.status(401).json({ message: info.message });
       }
-      req.logIn(user, (err) => {
-        if (err) {
-          res.status(500).json({ message: err.message });
-        }
-        user.password = "*****";
-        const token = jwt.sign(
-          { user },
-          process.env.TOKEN_SECRET ?? "default_jwt_secret",
-          { expiresIn: "10d" }
-        );
-
-        res
-          .status(200)
-          .json({
-            message: "Login successfully",
-            data: { token, account: user },
-          });
-      });
+      else {
+        req.logIn(user, (err) => {
+          if (err) {
+            res.status(500).json({ message: err.message });
+          }
+          user.password = "*****";
+          const token = jwt.sign(
+            { user },
+            process.env.TOKEN_SECRET ?? "default_jwt_secret",
+            { expiresIn: "10d" },
+          );
+  
+          res.status(200).json({ message: "Login successfully", data: { token, account: user } });
+        });
+      }
     })(req, res);
   };
 
