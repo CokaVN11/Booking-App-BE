@@ -52,6 +52,7 @@ export class AccountService {
         bank_number: user.bank_number,
         wallet: user.wallet,
         phone: user.phone,
+        fullname: user.fullname,
         hotel_name: user.hotel_name,
         hotel_address: user.hotel_address,
         description: user.description,

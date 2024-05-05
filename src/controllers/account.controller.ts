@@ -28,45 +28,38 @@ export class AccountController {
       let result;
 
       if (role === "customer") {
-        const { username, password, fullname, role } = req.body;
+        const { username, email, password, phone, fullname, role } = req.body;
 
-        result = await AccountService.getInstance().addAccount({
-          username,
-          email: "none@gmail.com",
-          password,
-          role,
-          bank_number: "",
-          wallet: 0,
-          phone: "",
-          fullname,
-          hotel_name: null,
-          hotel_address: null,
-          description: null,
-          image: null,
+        result = await AccountService.getInstance().addAccount({ 
+          username, 
+          email, 
+          password, 
+          role, 
+          bank_number: "123123", 
+          wallet: 0, 
+          phone, 
+          fullname, 
+          hotel_name: null, 
+          hotel_address: null, 
+          description: null, 
+          image: null 
         });
       } else {
-        const {
-          username,
-          password,
-          hotel_name,
-          hotel_address,
-          description,
-          role,
-        } = req.body;
+        const { username, email, password, phone, fullname, hotelName, hotelAddress, description, role } = req.body;
 
-        result = await AccountService.getInstance().addAccount({
-          username,
-          email: "none@gmail.com",
-          password,
-          role,
-          bank_number: "",
-          wallet: 0,
-          phone: "",
-          fullname: null,
-          hotel_name,
-          hotel_address,
-          description,
-          image: null,
+        result = await AccountService.getInstance().addAccount({ 
+          username, 
+          email, 
+          password, 
+          role, 
+          bank_number: "123123", 
+          wallet: 0, 
+          phone, 
+          fullname, 
+          hotel_name: hotelName, 
+          hotel_address: hotelAddress, 
+          description, 
+          image: null
         });
       }
 
@@ -80,10 +73,25 @@ export class AccountController {
   login = async (req: Request, res: Response) => {
     passport.authenticate("local", (err: Error, user: any, info: any) => {
       if (err) {
-        return res.status(500).json({ message: err.message });
+        res.status(500).json({ message: err.message });
       }
       if (!user) {
-        return res.status(401).json({ message: info.message });
+        res.status(401).json({ message: info.message });
+      }
+      else {
+        req.logIn(user, (err) => {
+          if (err) {
+            res.status(500).json({ message: err.message });
+          }
+          user.password = "*****";
+          const token = jwt.sign(
+            { user },
+            process.env.TOKEN_SECRET ?? "default_jwt_secret",
+            { expiresIn: "10d" },
+          );
+  
+          res.status(200).json({ message: "Login successfully", data: { token, account: user } });
+        });
       }
       try {
         req.logIn(user, (err) => {
