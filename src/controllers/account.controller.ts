@@ -126,7 +126,7 @@ export class AccountController {
       const accountId = req.params.accountId;
       const updateUserInfo = req.body;
 
-      const updatedUser = await AccountService.getInstance().updateAccount(accountId, updateUserInfo);
+      const updatedUser = await AccountService.getInstance().updateAccount(updateUserInfo);
       res.status(200).json({ data: { user: updatedUser }, message: "Update successfully" });
     } catch (error) {
       const _error = error as Error;

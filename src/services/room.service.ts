@@ -15,6 +15,32 @@ export class RoomService {
     return RoomService.instance;
   }
 
+  getAllRoom = async () => {
+    try {
+      const rooms = await RoomModel.find();
+      if (rooms.length === 0) {
+        throw new Error("No rooms found");
+      }
+      return rooms;
+    } catch (error) {
+      const _error = error as Error;
+      throw new Error(_error.message);
+    }
+  };
+
+  deleteRoom = async (room_id: string) => {
+    try {
+      const room = await RoomModel.findByIdAndDelete(room_id);
+      if (!room) {
+        throw new Error("Room not found");
+      }
+      return room;
+    } catch (error) {
+      const _error = error as Error;
+      throw new Error(_error.message);
+    }
+  };
+
   getRoomByHotelId = async (
     hotel_id: string,
     room_type?: string,
