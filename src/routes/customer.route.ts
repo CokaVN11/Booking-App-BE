@@ -73,3 +73,5 @@ customerRoute.post(
   "/booking",
   Controller.BookingController.getInstance().addBooking
 )
+
+customerRoute.get("/noti/:to", Controller.NotificationController.getInstance().getNotificationByTo);
