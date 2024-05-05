@@ -30,18 +30,42 @@ moderatorRoute.delete(
 );
 
 // Room Type
-moderatorRoute.get("/room_type",Controller.RoomTypeController.getInstance().getAllRoomType);
-moderatorRoute.get("/room_type/:hotel_id", Controller.RoomTypeController.getInstance().getRoomTypeByHotelId);
-moderatorRoute.post("/room_type", Controller.RoomTypeController.getInstance().addRoomType);
-moderatorRoute.put("/room_type/:id", Controller.RoomTypeController.getInstance().updateRoomType);
-moderatorRoute.delete("/room_type/:id", Controller.RoomTypeController.getInstance().deleteRoomType);
+moderatorRoute.get(
+  "/room-type",
+  Controller.RoomTypeController.getInstance().getAllRoomType
+);
+moderatorRoute.get(
+  "/room-type/:hotel_id",
+  Controller.RoomTypeController.getInstance().getRoomTypeByHotelId
+);
+moderatorRoute.post(
+  "/room-type",
+  Controller.RoomTypeController.getInstance().addRoomType
+);
+moderatorRoute.put(
+  "/room-type/:id",
+  Controller.RoomTypeController.getInstance().updateRoomType
+);
+moderatorRoute.delete(
+  "/room-type/:id",
+  Controller.RoomTypeController.getInstance().deleteRoomType
+);
 
 // Room
 moderatorRoute.get("/room", Controller.RoomController.getInstance().getAllRoom);
-moderatorRoute.get("/room/:hotel_id", Controller.RoomController.getInstance().getRoomByHotelId);
+moderatorRoute.get(
+  "/room/:hotel_id",
+  Controller.RoomController.getInstance().getRoomByHotelId
+);
 moderatorRoute.post("/room", Controller.RoomController.getInstance().addRoom);
-moderatorRoute.put("/room/:id", Controller.RoomController.getInstance().updateRoom);
-moderatorRoute.delete("/room/:id", Controller.RoomController.getInstance().deleteRoom);
+moderatorRoute.put(
+  "/room/:id",
+  Controller.RoomController.getInstance().updateRoom
+);
+moderatorRoute.delete(
+  "/room/:id",
+  Controller.RoomController.getInstance().deleteRoom
+);
 
 // Booking
 moderatorRoute.get("/booking/:hotel", Controller.BookingController.getInstance().getBookingOfHotel);
@@ -50,3 +74,18 @@ moderatorRoute.delete("/booking/:id", Controller.BookingController.getInstance()
 
 // Notification
 moderatorRoute.get("/noti/:to", Controller.NotificationController.getInstance().getNotificationByTo);
+// get all waiting booking
+moderatorRoute.get("/booking/waiting/:hotel_id", Controller.BookingController.getInstance().getAllWaitingBooking);
+// get all accpeted booking
+moderatorRoute.get("/booking/accepted/:hotel_id", Controller.BookingController.getInstance().getAllAcceptedBooking);
+// get all staying booking
+moderatorRoute.get("/booking/staying/:hotel_id", Controller.BookingController.getInstance().getAllStayingBooking);
+
+// accept booking
+moderatorRoute.put("/booking/accept/:booking_id", Controller.BookingController.getInstance().acceptBooking);
+// reject booking
+moderatorRoute.put("/booking/reject/:booking_id", Controller.BookingController.getInstance().rejectBooking);
+// check in booking
+moderatorRoute.put("/booking/checkin/:booking_id", Controller.BookingController.getInstance().checkInBooking);
+// complete booking
+moderatorRoute.put("/booking/checkout/:booking_id", Controller.BookingController.getInstance().checkOutBooking);

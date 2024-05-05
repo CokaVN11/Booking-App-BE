@@ -69,3 +69,7 @@ customerRoute.post(
   "/rating",
   Controller.RatingController.getInstance().addRating
 );
+customerRoute.post(
+  "/booking",
+  Controller.BookingController.getInstance().addBooking
+)
