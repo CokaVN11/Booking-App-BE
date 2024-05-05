@@ -88,8 +88,7 @@ export class AccountController {
       }
       if (!user) {
         res.status(401).json({ message: info.message });
-      }
-      else {
+      } else {
         req.logIn(user, (err) => {
           if (err) {
             res.status(500).json({ message: err.message });
@@ -97,10 +96,31 @@ export class AccountController {
           const token = jwt.sign(
             { user },
             process.env.TOKEN_SECRET ?? "default_jwt_secret",
-            { expiresIn: "10d" },
+            { expiresIn: "10d" }
           );
-  
-          res.status(200).json({ message: "Login successfully", data: { token, account: user } });
+
+          const _user = {
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            password: user.password,
+            role: user.role,
+            phone: user.phone,
+            fullname: user.fullname,
+            bankNumber: user.bank_number,
+            wallet: user.wallet,
+            hotelName: user.hotel_name,
+            hotelAddress: user.hotel_address,
+            description: user.description,
+            image: user.image,
+          };
+
+          res
+            .status(200)
+            .json({
+              message: "Login successfully",
+              data: { token, account: _user },
+            });
         });
       }
     })(req, res);
