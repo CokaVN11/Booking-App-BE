@@ -201,6 +201,19 @@ export class BookingService {
       const booking = await BookingModel.findByIdAndUpdate(booking_id, {
         status: "approved",
       });
+
+      const hotel = await AccountService.getInstance().getAccount(booking!!.hotel.toString());
+
+      NotificationService.getInstance().updateNotification({
+        from_id: booking?.hotel.toString() ?? "",
+        to_id: booking?.customer.toString() ?? "",
+        for: "customer",
+        title: "Booking accepted",
+        content: `Your booking has been accepted by ${hotel.hotel_name}`,
+        booking: booking?._id.toString() ?? "",
+        room: booking?.room.toString() ?? "",
+      });
+
       return booking;
     } catch (error) {
       const _error = error as Error;
@@ -213,6 +226,19 @@ export class BookingService {
       const booking = await BookingModel.findByIdAndUpdate(booking_id, {
         status: "rejected",
       });
+
+      const hotel = await AccountService.getInstance().getAccount(booking!!.hotel.toString());
+
+      NotificationService.getInstance().updateNotification({
+        from_id: booking?.hotel.toString() ?? "",
+        to_id: booking?.customer.toString() ?? "",
+        for: "customer",
+        title: "Booking rejected",
+        content: `Your booking has been rejected by ${hotel.hotel_name}`,
+        booking: booking?._id.toString() ?? "",
+        room: booking?.room.toString() ?? "",
+      });
+
       return booking;
     } catch (error) {
       const _error = error as Error;
@@ -225,6 +251,19 @@ export class BookingService {
       const booking = await BookingModel.findByIdAndUpdate(booking_id, {
         status: "staying",
       });
+
+      const hotel = await AccountService.getInstance().getAccount(booking!!.hotel.toString());
+
+      NotificationService.getInstance().updateNotification({
+        from_id: booking?.hotel.toString() ?? "",
+        to_id: booking?.customer.toString() ?? "",
+        for: "customer",
+        title: "Check-in",
+        content: `Your booking has been checked-in by ${hotel.hotel_name}`,
+        booking: booking?._id.toString() ?? "",
+        room: booking?.room.toString() ?? "",
+      });
+
       return booking;
     } catch (error) {
       const _error = error as Error;
@@ -237,6 +276,19 @@ export class BookingService {
       const booking = await BookingModel.findByIdAndUpdate(booking_id, {
         status: "completed",
       });
+
+      const hotel = await AccountService.getInstance().getAccount(booking!!.hotel.toString());
+
+      NotificationService.getInstance().updateNotification({
+        from_id: booking?.hotel.toString() ?? "",
+        to_id: booking?.customer.toString() ?? "",
+        for: "customer",
+        title: "Check-out",
+        content: `Your booking has been checked-out by ${hotel.hotel_name}`,
+        booking: booking?._id.toString() ?? "",
+        room: booking?.room.toString() ?? "",
+      });
+
       return booking;
     } catch (error) {
       const _error = error as Error;

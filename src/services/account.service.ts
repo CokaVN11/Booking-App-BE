@@ -112,14 +112,14 @@ export class AccountService {
     return password === storedPassword;
   }
 
-  updateAccount = async (user: Account) => {
+  updateAccount = async (accountId: string, user: Account) => {
     const account = await AccountModel.findOne({ username: user.username });
     if (!account) {
       throw new Error("Account not found");
     }
     try {
-      await AccountModel.findByIdAndUpdate(account._id, user);
-      return await AccountModel.findById(account._id);
+      await AccountModel.findByIdAndUpdate(accountId, user);
+      return await AccountModel.findById(accountId);
     } catch (error) {
       const _error = error as Error;
       throw new Error(_error.message);
