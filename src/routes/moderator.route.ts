@@ -89,3 +89,13 @@ moderatorRoute.put("/booking/reject/:booking_id", Controller.BookingController.g
 moderatorRoute.put("/booking/checkin/:booking_id", Controller.BookingController.getInstance().checkInBooking);
 // complete booking
 moderatorRoute.put("/booking/checkout/:booking_id", Controller.BookingController.getInstance().checkOutBooking);
+
+moderatorRoute.get(
+  "/hotel/:hotel_id",
+  Controller.AccountController.getInstance().getModerator
+);
+
+moderatorRoute.get(
+  "/hotel/rating/:hotel_id",
+  Controller.RatingController.getInstance().getAverageRating
+);
