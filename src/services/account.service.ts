@@ -85,12 +85,16 @@ export class AccountService {
     return `${buf.toString("hex")}.${salt}`;
   };
 
-  comparePassword = async (password: string, storedPassword: string) => {
+  comparePasswordWithHash = async (password: string, storedPassword: string) => {
     const [hashedPassword, salt] = storedPassword.split(".");
     const buf = Buffer.from(hashedPassword, "hex");
     const hashedPasswordBuf = crypto.scryptSync(password, salt, 64);
     return crypto.timingSafeEqual(buf, hashedPasswordBuf);
   };
+
+  comparePassword = async (password: string, storedPassword: string) => {
+    return password === storedPassword;
+  }
 
   updateAccount = async (user: Account) => {
     const account = await AccountModel.findOne({ username: user.username });
