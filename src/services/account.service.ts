@@ -1,5 +1,6 @@
 import { AccountModel } from "@models";
 import crypto from "crypto";
+import mongoose from "mongoose";
 
 export class AccountService {
   private static instance: AccountService | null = null;
