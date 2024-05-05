@@ -88,8 +88,7 @@ export class AccountController {
       }
       if (!user) {
         res.status(401).json({ message: info.message });
-      }
-      else {
+      } else {
         req.logIn(user, (err) => {
           if (err) {
             res.status(500).json({ message: err.message });
@@ -97,7 +96,7 @@ export class AccountController {
           const token = jwt.sign(
             { user },
             process.env.TOKEN_SECRET ?? "default_jwt_secret",
-            { expiresIn: "10d" },
+            { expiresIn: "10d" }
           );
 
           const _user = {
@@ -148,9 +147,13 @@ export class AccountController {
 
   getModerators = async (req: Request, res: Response) => {
     try {
+      const user_id = req.query.userId as string;
       const num = req.query.number ? parseInt(req.query.number as string) : 10;
       const start = req.query.start ? parseInt(req.query.start as string) : 0;
-      const moderators = await AccountService.getInstance().getModerators(start, num);
+
+      console.log('Get moderators', user_id, start, num)
+
+      const moderators = await AccountService.getInstance().getModerators(user_id, start, num);
 
       res.status(200).json({ data: moderators });
     } catch (error) {

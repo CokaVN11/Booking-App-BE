@@ -30,18 +30,42 @@ moderatorRoute.delete(
 );
 
 // Room Type
-moderatorRoute.get("/room_type",Controller.RoomTypeController.getInstance().getAllRoomType);
-moderatorRoute.get("/room_type/:hotel_id", Controller.RoomTypeController.getInstance().getRoomTypeByHotelId);
-moderatorRoute.post("/room_type", Controller.RoomTypeController.getInstance().addRoomType);
-moderatorRoute.put("/room_type/:id", Controller.RoomTypeController.getInstance().updateRoomType);
-moderatorRoute.delete("/room_type/:id", Controller.RoomTypeController.getInstance().deleteRoomType);
+moderatorRoute.get(
+  "/room-type",
+  Controller.RoomTypeController.getInstance().getAllRoomType
+);
+moderatorRoute.get(
+  "/room-type/:hotel_id",
+  Controller.RoomTypeController.getInstance().getRoomTypeByHotelId
+);
+moderatorRoute.post(
+  "/room-type",
+  Controller.RoomTypeController.getInstance().addRoomType
+);
+moderatorRoute.put(
+  "/room-type/:id",
+  Controller.RoomTypeController.getInstance().updateRoomType
+);
+moderatorRoute.delete(
+  "/room-type/:id",
+  Controller.RoomTypeController.getInstance().deleteRoomType
+);
 
 // Room
 moderatorRoute.get("/room", Controller.RoomController.getInstance().getAllRoom);
-moderatorRoute.get("/room/:hotel_id", Controller.RoomController.getInstance().getRoomByHotelId);
+moderatorRoute.get(
+  "/room/:hotel_id",
+  Controller.RoomController.getInstance().getRoomByHotelId
+);
 moderatorRoute.post("/room", Controller.RoomController.getInstance().addRoom);
-moderatorRoute.put("/room/:id", Controller.RoomController.getInstance().updateRoom);
-moderatorRoute.delete("/room/:id", Controller.RoomController.getInstance().deleteRoom);
+moderatorRoute.put(
+  "/room/:id",
+  Controller.RoomController.getInstance().updateRoom
+);
+moderatorRoute.delete(
+  "/room/:id",
+  Controller.RoomController.getInstance().deleteRoom
+);
 
 // Booking
 moderatorRoute.get("/booking/:hotel", Controller.BookingController.getInstance().getBookingOfHotel);

@@ -55,3 +55,8 @@ customerRoute.put(
   "/profile/:accountId",
   Controller.AccountController.getInstance().update
 )
+
+customerRoute.post(
+  "/booking",
+  Controller.BookingController.getInstance().addBooking
+)
