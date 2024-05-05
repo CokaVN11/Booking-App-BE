@@ -1,12 +1,13 @@
-import { Request, Response } from 'express';
-import { AccountService } from '@services';
+import { AccountService, OTPService } from "@services";
+import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import passport from 'passport';
+import passport from "passport";
+import otpGenerator from "otp-generator";
 
 export class AccountController {
   private static instance: AccountController | null = null;
 
-  private constructor() { }
+  private constructor() {}
 
   static getInstance(): AccountController {
     if (!AccountController.instance) {
@@ -18,9 +19,8 @@ export class AccountController {
 
   register = async (req: Request, res: Response) => {
     try {
-      
       const role = req.body.role || "";
-      
+
       if (role !== "customer" && role !== "moderator") {
         throw new Error("Role must be customer or moderator");
       }
@@ -62,7 +62,7 @@ export class AccountController {
           image: null
         });
       }
-      
+
       res.status(200).json({ message: "Register successfully", data: result });
     } catch (error) {
       const _error = error as Error;
@@ -93,20 +93,68 @@ export class AccountController {
           res.status(200).json({ message: "Login successfully", data: { token, account: user } });
         });
       }
+      try {
+        req.logIn(user, (err) => {
+          if (err) {
+            return res.status(500).json({ message: err.message });
+          }
+          user.password = "*****";
+          const token = jwt.sign(
+            { user },
+            process.env.TOKEN_SECRET ?? "default_jwt_secret",
+            { expiresIn: "10d" }
+          );
+
+          return res
+            .status(200)
+            .json({
+              message: "Login successfully",
+              data: { token, account: user },
+            });
+        });
+      } catch (error) {
+        return res.status(500).json({ message: "Something went wrong" });
+      }
     })(req, res);
   };
 
   update = async (req: Request, res: Response) => {
     try {
-      const { username, email, password, role, bank_number, wallet, phone, fullname, hotel_name, hotel_address, description, image } = req.body;
+      const {
+        username,
+        email,
+        password,
+        role,
+        bank_number,
+        wallet,
+        phone,
+        fullname,
+        hotel_name,
+        hotel_address,
+        description,
+        image,
+      } = req.body;
 
-      const user = await AccountService.getInstance().updateAccount({ username, email, password, role, bank_number, wallet, phone, fullname, hotel_name, hotel_address, description, image });
+      const user = await AccountService.getInstance().updateAccount({
+        username,
+        email,
+        password,
+        role,
+        bank_number,
+        wallet,
+        phone,
+        fullname,
+        hotel_name,
+        hotel_address,
+        description,
+        image,
+      });
       res.status(200).json(user);
     } catch (error) {
       const _error = error as Error;
       res.status(400).json({ message: _error.message });
     }
-  }
+  };
 
   delete = async (req: Request, res: Response) => {
     try {
@@ -146,4 +194,71 @@ export class AccountController {
       res.status(400).json({ message: _error.message });
     }
   };
+
+  forgotPassword = async (req: Request, res: Response) => {
+    try {
+      const username = req.body.username;
+      const user = await AccountService.getInstance().getAccountByUsername(
+        username
+      );
+
+      if (!user) {
+        res.status(400).json({ message: "Username does not exist" });
+      } else {
+        const otp = otpGenerator.generate(6, { digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
+        await OTPService.getInstance().sendOTP(user.email, otp);
+        res.status(200).json({ message: "OTP has been sent" });
+      }
+    } catch (error) {
+      const _error = error as Error;
+      res.status(400).json({ message: _error.message });
+    }
+  };
+
+  verifyOTP = async (req: Request, res: Response) => {
+    try {
+      const username = req.body.username;
+      const otp = req.body.otp;
+
+      const user = await AccountService.getInstance().getAccountByUsername(
+        username
+      );
+
+      if (!user) {
+        res.status(400).json({ message: "Username does not exist" });
+      } else {
+        const otpData = await OTPService.getInstance().getOTP(user.email);
+
+        if (otpData && otpData.otp === otp) {
+          res.status(200).json({ message: "OTP is valid" });
+        } else {
+          res.status(400).json({ message: "Invalid OTP" });
+        }
+      }
+    } catch (error) {
+      const _error = error as Error;
+      res.status(400).json({ message: _error.message });
+    }
+  };
+
+  resetPassword = async (req: Request, res: Response) => {
+    try {
+      const username = req.body.username;
+      const password = req.body.password;
+
+      const user = await AccountService.getInstance().getAccountByUsername(
+        username
+      );
+
+      if (!user) {
+        res.status(400).json({ message: "Username does not exist" });
+      } else {
+        await AccountService.getInstance().updatePassword(username, password);
+        res.status(200).json({ message: "Password has been updated" });
+      }
+    } catch (error) {
+      const _error = error as Error;
+      res.status(400).json({ message: _error.message });
+    }
+  }
 }
