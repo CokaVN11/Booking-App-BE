@@ -43,3 +43,6 @@ moderatorRoute.post("/room", Controller.RoomController.getInstance().addRoom);
 moderatorRoute.get("/booking/:hotel", Controller.BookingController.getInstance().getBookingOfHotel);
 moderatorRoute.put("/booking", Controller.BookingController.getInstance().updateBookingStatus);
 moderatorRoute.delete("/booking/:id", Controller.BookingController.getInstance().deleteBooking);
+
+// Notification
+moderatorRoute.get("/noti/:to", Controller.NotificationController.getInstance().getNotificationByTo);

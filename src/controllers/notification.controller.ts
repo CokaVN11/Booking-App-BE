@@ -14,5 +14,25 @@ export class NotificationController {
         return NotificationController.instance;
     }
 
-    // Code here
+    getNotificationByTo = async (req: Request, res: Response) => {
+        try {
+            const { to } = req.params;
+            const notifications = await NotificationService.getInstance().getNotificationByTo(to);
+            return res.status(200).json({ data: notifications });
+        } catch (error) {
+            const _error = error as Error;
+            return res.status(500).json({ message: _error.message });
+        }
+    }
+
+    getNotificationByFrom = async (req: Request, res: Response) => {
+        try {
+            const { from } = req.params;
+            const notifications = await NotificationService.getInstance().getNotificationByFrom(from);
+            return res.status(200).json({ data: notifications });
+        } catch (error) {
+            const _error = error as Error;
+            return res.status(500).json({ message: _error.message });
+        }
+    }
 }
