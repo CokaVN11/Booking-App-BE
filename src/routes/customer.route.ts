@@ -30,3 +30,8 @@ customerRoute.put(
   "/booking",
   Controller.BookingController.getInstance().updateBookingDate
 );
+
+customerRoute.get(
+  "/profile/:accountId",
+  Controller.AccountController.getInstance().getProfile
+)

@@ -144,4 +144,20 @@ export class AccountController {
       res.status(400).json({ message: _error.message });
     }
   };
+
+  getProfile = async (req: Request, res: Response) => {
+    try {
+      const accountId = req.params.accountId;
+      const user = await AccountService.getInstance().getAccount(accountId);
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      res.status(200).json({data: {user: user}});
+    } catch (error) {
+      const _error = error as Error;
+      res.status(400).json({ message: _error.message });
+    }
+  }
 }

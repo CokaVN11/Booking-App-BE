@@ -50,10 +50,10 @@ router.get("/", (_req, res) => {
 
 router.use("/auth", authRoute);
 
-router.use(AuthMiddleware.getInstance().authenticate);
+// router.use(AuthMiddleware.getInstance().authenticate);
 router.use("/booking", bookingRoute);
 
-router.use(AuthMiddleware.getInstance().authorize);
+// router.use(AuthMiddleware.getInstance().authorize);
 router.use("/moderator", moderatorRoute);
 router.use("/customer", customerRoute);
 
