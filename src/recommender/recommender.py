@@ -82,4 +82,4 @@ def make_recommendations(user_id, n: int = 10):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=os.environ.get("PORT", 5000), debug=True)
+    app.run(host="0.0.0.0", port=os.environ.get("PORT", 8080), debug=True)
