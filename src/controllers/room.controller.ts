@@ -102,7 +102,7 @@ export class RoomController {
         image: img,
         amenities_ids: [], // Assuming amenities are empty for now
       });
-      
+
       res.status(200).json({ data: room });
     } catch (error) {
       // Handle errors
