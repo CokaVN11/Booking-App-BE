@@ -71,6 +71,9 @@ moderatorRoute.delete(
 moderatorRoute.get("/booking/:hotel", Controller.BookingController.getInstance().getBookingOfHotel);
 moderatorRoute.put("/booking", Controller.BookingController.getInstance().updateBookingStatus);
 moderatorRoute.delete("/booking/:id", Controller.BookingController.getInstance().deleteBooking);
+
+// Notification
+moderatorRoute.get("/noti/:to", Controller.NotificationController.getInstance().getNotificationByTo);
 // get all waiting booking
 moderatorRoute.get("/booking/waiting/:hotel_id", Controller.BookingController.getInstance().getAllWaitingBooking);
 // get all accpeted booking

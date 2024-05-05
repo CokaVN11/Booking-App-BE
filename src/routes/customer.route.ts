@@ -3,6 +3,10 @@ import { Router } from "express";
 
 export const customerRoute = Router();
 
+// Notification
+customerRoute.get("/noti/:to", Controller.NotificationController.getInstance().getNotificationByTo);
+
+
 customerRoute.get(
   "/hotel",
   Controller.AccountController.getInstance().getModerators
@@ -56,6 +60,15 @@ customerRoute.put(
   Controller.AccountController.getInstance().update
 )
 
+customerRoute.get(
+  "/rating/:hotel_id",
+  Controller.RatingController.getInstance().getRatingOfHotel
+);
+
+customerRoute.post(
+  "/rating",
+  Controller.RatingController.getInstance().addRating
+);
 customerRoute.post(
   "/booking",
   Controller.BookingController.getInstance().addBooking

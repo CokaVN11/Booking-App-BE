@@ -14,6 +14,28 @@ export class RatingController {
         return RatingController.instance;
     }
 
+    addRating = async (req: Request, res: Response) => {
+        try {
+            const rating = req.body;
+            const newRating = await RatingService.getInstance().addRating(rating);
+            res.json({ data: newRating });
+        } catch (error) {
+            const _error = error as Error;
+            res.status(500).json({ message: _error.message });
+        }
+    };
+
+    getRatingOfHotel = async (req: Request, res: Response) => {
+        try {
+            const { hotel_id } = req.params;
+            const ratings = await RatingService.getInstance().getRatingOfHotel(hotel_id);
+            res.json({ data: ratings });
+        } catch (error) {
+            const _error = error as Error;
+            res.status(500).json({ message: _error.message });
+        }
+    };
+
     getAverageRating = async (req: Request, res: Response) => {
         try {
             const { hotel_id } = req.params;
