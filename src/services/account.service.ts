@@ -93,23 +93,14 @@ export class AccountService {
     return crypto.timingSafeEqual(buf, hashedPasswordBuf);
   };
 
-  comparePassword = async (password: string, storedPassword: string) => {
-    return password === storedPassword;
-  }
-
-  updateAccount = async (user: Account) => {
-    const account = await AccountModel.findOne({ username: user.username });
-    if (!account) {
-      throw new Error("Account not found");
-    }
-
-    if (user.password) {
-      user.password = await this.hashPassword(user.password);
-    }
-
+  updateAccount = async (accountId: string, user: Account) => {
     try {
-      await AccountModel.updateOne({ username: user.username }, user);
-      return await AccountModel.findOne({ username: user.username });
+      const account = await AccountModel.findOneAndUpdate({ _id: accountId }, user, { new: true })
+      if (!account) {
+        throw new Error("Account not found");
+      }
+  
+      return account;
     } catch (error) {
       const _error = error as Error;
       throw new Error(_error.message);
