@@ -80,5 +80,81 @@ export class BookingController {
             res.status(400).json({ message: _error.message });
         }
     }
-    
+
+    getAllWaitingBooking = async (req: Request, res: Response) => {
+        try {
+            const hotel_id = req.params.hotel_id;
+            const bookings = await BookingService.getInstance().getAllWaitingBooking(hotel_id);
+            res.status(200).json({ data: bookings });
+        } catch (error) {
+            const _error = error as Error;
+            res.status(400).json({ message: _error.message });
+        }
+    }
+
+    getAllAcceptedBooking = async (req: Request, res: Response) => {
+        try {
+            const hotel_id = req.params.hotel_id;
+            const bookings = await BookingService.getInstance().getAllAcceptedBooking(hotel_id);
+            res.status(200).json({ data: bookings });
+        } catch (error) {
+            const _error = error as Error;
+            res.status(400).json({ message: _error.message });
+        }
+    }
+
+    getAllStayingBooking = async (req: Request, res: Response) => {
+        try {
+            const hotel_id = req.params.hotel_id;
+            const bookings = await BookingService.getInstance().getAllStayingBooking(hotel_id);
+            res.status(200).json({ data: bookings });
+        } catch (error) {
+            const _error = error as Error;
+            res.status(400).json({ message: _error.message });
+        }
+    }
+
+    acceptBooking = async (req: Request, res: Response) => {
+        try {
+            const booking_id = req.params.booking_id;
+            const updatedBooking = await BookingService.getInstance().acceptBooking(booking_id);
+            res.status(200).json({ data: updatedBooking });
+        } catch (error) {
+            const _error = error as Error;
+            res.status(400).json({ message: _error.message });
+        }
+    }
+
+    rejectBooking = async (req: Request, res: Response) => {
+        try {
+            const booking_id = req.params.booking_id;
+            const updatedBooking = await BookingService.getInstance().rejectBooking(booking_id);
+            res.status(200).json({ data: updatedBooking });
+        } catch (error) {
+            const _error = error as Error;
+            res.status(400).json({ message: _error.message });
+        }
+    }
+
+    checkInBooking = async (req: Request, res: Response) => {
+        try {
+            const booking_id = req.params.booking_id;
+            const updatedBooking = await BookingService.getInstance().checkInBooking(booking_id);
+            res.status(200).json({ data: updatedBooking });
+        } catch (error) {
+            const _error = error as Error;
+            res.status(400).json({ message: _error.message });
+        }
+    }
+
+    checkOutBooking = async (req: Request, res: Response) => {
+        try {
+            const booking_id = req.params.booking_id;
+            const updatedBooking = await BookingService.getInstance().checkOutBooking(booking_id);
+            res.status(200).json({ data: updatedBooking });
+        } catch (error) {
+            const _error = error as Error;
+            res.status(400).json({ message: _error.message });
+        }
+    }
 }

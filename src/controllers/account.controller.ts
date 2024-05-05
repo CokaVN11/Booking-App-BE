@@ -112,15 +112,10 @@ export class AccountController {
             hotelName: user.hotel_name,
             hotelAddress: user.hotel_address,
             description: user.description,
-            image: user.image,
-          };
-
-          res
-            .status(200)
-            .json({
-              message: "Login successfully",
-              data: { token, account: _user },
-            });
+            image: user.image
+          }
+  
+          res.status(200).json({ message: "Login successfully", data: { token, account: _user } });
         });
       }
     })(req, res);
