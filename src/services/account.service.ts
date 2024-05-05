@@ -1,6 +1,21 @@
-import { AccountModel } from "@models";
+import { AccountModel, RoomModel } from "@models";
 import crypto from "crypto";
 import mongoose from "mongoose";
+
+type AccountRes = {
+  _id?: string;
+  username: string;
+  email: string;
+  role: string;
+  bankNumber: string;
+  wallet: number;
+  phone: string;
+  fullname: string;
+  hotelName?: string;
+  hotelAddress?: string;
+  description?: string;
+  image?: string;
+};
 
 export class AccountService {
   private static instance: AccountService | null = null;
@@ -130,13 +145,23 @@ export class AccountService {
     }
   };
 
-  getModerators = async (start: number, num: number) => {
+  getModerators = async (user_id: string, start: number, num: number) => {
     try {
-      const moderators = await AccountModel.find({ role: "moderator" }).skip(start).limit(num);
+      let recommend: AccountRes[] = [];
+      if (start === 0)
+        try {
+          recommend = await this.getRecommendation(user_id, num * 2);
+        } catch (error) {
+          console.log(error);
+        }
+
+      if (recommend.length > num) return recommend.slice(0, num);
+
+      const moderators = await AccountModel.find({ role: "moderator" }).skip(start).limit(num - recommend.length);
 
       const data = moderators.map((moderator) => {
         return {
-          _id: moderator._id,
+          _id: moderator._id.toString(),
           username: moderator.username,
           email: moderator.email,
           role: moderator.role,
@@ -148,10 +173,13 @@ export class AccountService {
           hotelAddress: moderator.hotel_address,
           description: moderator.description,
           image: moderator.image,
-        };
+        } as AccountRes
       });
 
-      return data;
+      data.push(...recommend);
+
+      // return unique moderators
+      return data.filter((moderator, index, self) => self.findIndex((t) => t._id === moderator._id) === index);
     } catch (error) {
       const _error = error as Error;
       throw new Error(_error.message);
@@ -183,6 +211,46 @@ export class AccountService {
       image: moderator.image,
     };
   }
+
+  getRecommendation = async (user_id: string, num: number): Promise<AccountRes[]> => {
+    try {
+      const account = await AccountModel.findById(user_id);
+      if (!account) {
+        throw new Error("Account not found");
+      }
+
+      const recommendationRoom = await fetch(`http://localhost:8080/recommend?userId=${user_id}&number=${num}`)
+      const recommendation = await recommendationRoom.json().then((data) => data.data);
+
+      // find the hotel_id of the recommendation room id and return hotel info
+      const hotelIds = await Promise.all(recommendation.map(async (roomId: string) => await RoomModel.findById(roomId, { hotel: 1 })));
+      const uniqueHotelIds = Array.from(new Set(hotelIds.map((hotelId) => hotelId.hotel.toString())));
+      const hotels = await Promise.all(uniqueHotelIds.map(async (hotelId) => await AccountModel.findById(hotelId)));
+      const data = hotels.map((hotel) => {
+        return {
+          _id: hotel?._id.toString(),
+          username: hotel?.username,
+          email: hotel?.email,
+          role: hotel?.role,
+          bankNumber: hotel?.bank_number,
+          wallet: hotel?.wallet,
+          phone: hotel?.phone,
+          fullname: hotel?.fullname,
+          hotelName: hotel?.hotel_name,
+          hotelAddress: hotel?.hotel_address,
+          description: hotel?.description,
+          image: hotel?.image,
+        } as AccountRes;
+      });
+    
+
+      return data;
+    } catch (error) {
+      const _error = error as Error;
+      throw new Error(_error.message);
+    }
+  };
+
   updatePassword = async (username: string, password: string) => {
     try {
       const account = await AccountModel.findOneAndUpdate(
