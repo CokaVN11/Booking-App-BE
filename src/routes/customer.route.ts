@@ -35,3 +35,8 @@ customerRoute.get(
   "/profile/:accountId",
   Controller.AccountController.getInstance().getProfile
 )
+
+customerRoute.put(
+  "/profile/:accountId",
+  Controller.AccountController.getInstance().update
+)

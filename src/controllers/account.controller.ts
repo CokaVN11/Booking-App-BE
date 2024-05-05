@@ -96,10 +96,11 @@ export class AccountController {
 
   update = async (req: Request, res: Response) => {
     try {
-      const { username, email, password, role, bank_number, wallet, phone, fullname, hotel_name, hotel_address, description, image } = req.body;
+      const accountId = req.params.accountId;
+      const updateUserInfo = req.body;
 
-      const user = await AccountService.getInstance().updateAccount({ username, email, password, role, bank_number, wallet, phone, fullname, hotel_name, hotel_address, description, image });
-      res.status(200).json(user);
+      const updatedUser = await AccountService.getInstance().updateAccount(accountId, updateUserInfo);
+      res.status(200).json({ data: { user: updatedUser }, message: "Update successfully" });
     } catch (error) {
       const _error = error as Error;
       res.status(400).json({ message: _error.message });
