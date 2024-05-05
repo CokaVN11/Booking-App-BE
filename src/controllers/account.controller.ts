@@ -99,8 +99,24 @@ export class AccountController {
             process.env.TOKEN_SECRET ?? "default_jwt_secret",
             { expiresIn: "10d" },
           );
+
+          const _user = {
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            password: user.password,
+            role: user.role,
+            phone: user.phone,
+            fullname: user.fullname,
+            bankNumber: user.bank_number,
+            wallet: user.wallet,
+            hotelName: user.hotel_name,
+            hotelAddress: user.hotel_address,
+            description: user.description,
+            image: user.image
+          }
   
-          res.status(200).json({ message: "Login successfully", data: { token, account: user } });
+          res.status(200).json({ message: "Login successfully", data: { token, account: _user } });
         });
       }
     })(req, res);

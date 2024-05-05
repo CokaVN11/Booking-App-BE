@@ -47,3 +47,18 @@ moderatorRoute.delete("/room/:id", Controller.RoomController.getInstance().delet
 moderatorRoute.get("/booking/:hotel", Controller.BookingController.getInstance().getBookingOfHotel);
 moderatorRoute.put("/booking", Controller.BookingController.getInstance().updateBookingStatus);
 moderatorRoute.delete("/booking/:id", Controller.BookingController.getInstance().deleteBooking);
+// get all waiting booking
+moderatorRoute.get("/booking/waiting/:hotel_id", Controller.BookingController.getInstance().getAllWaitingBooking);
+// get all accpeted booking
+moderatorRoute.get("/booking/accepted/:hotel_id", Controller.BookingController.getInstance().getAllAcceptedBooking);
+// get all staying booking
+moderatorRoute.get("/booking/staying/:hotel_id", Controller.BookingController.getInstance().getAllStayingBooking);
+
+// accept booking
+moderatorRoute.put("/booking/accept/:booking_id", Controller.BookingController.getInstance().acceptBooking);
+// reject booking
+moderatorRoute.put("/booking/reject/:booking_id", Controller.BookingController.getInstance().rejectBooking);
+// check in booking
+moderatorRoute.put("/booking/checkin/:booking_id", Controller.BookingController.getInstance().checkInBooking);
+// complete booking
+moderatorRoute.put("/booking/checkout/:booking_id", Controller.BookingController.getInstance().checkOutBooking);
