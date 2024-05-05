@@ -1,4 +1,5 @@
 import { RoomTypeModel } from "@models";
+import mongoose from "mongoose";
 
 export class RoomTypeService {
     private static instance: RoomTypeService | null = null;
@@ -29,7 +30,7 @@ export class RoomTypeService {
 
     getRoomTypeByHotelId = async (hotel_id: string) => {
         try {
-            const room_types = await RoomTypeModel.find({ hotel: hotel_id });
+            const room_types = await RoomTypeModel.find({ hotel: new mongoose.Types.ObjectId(hotel_id) });
             if (room_types.length === 0) {
                 throw new Error("No room type found");
             }
@@ -75,6 +76,19 @@ export class RoomTypeService {
                 throw new Error("Room type not found");
             }
             return room_type;
+        } catch (error) {
+            const _error = error as Error;
+            throw new Error(_error.message);
+        }
+    }
+
+    checkRoomTypeId = async (room_type_id: string) => {
+        try {
+            const room_type = await RoomTypeModel.findById(room_type_id);
+            if (!room_type) {
+                return false;
+            }
+            return true;
         } catch (error) {
             const _error = error as Error;
             throw new Error(_error.message);

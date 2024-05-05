@@ -14,5 +14,14 @@ export class RatingController {
         return RatingController.instance;
     }
 
-    // Code here
+    getAverageRating = async (req: Request, res: Response) => {
+        try {
+            const { hotel_id } = req.params;
+            const average = await RatingService.getInstance().getAverageRating(hotel_id);
+            res.json({ data: average });
+        } catch (error) {
+            const _error = error as Error;
+            res.status(500).json({ message: _error.message });
+        }
+    };
 }

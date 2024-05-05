@@ -7,3 +7,5 @@ export * from './rating.service';
 export * from './report.service';
 export * from './room.service';
 export * from './roomType.service';
+export * from './otp.service';
+export * from './email.service';

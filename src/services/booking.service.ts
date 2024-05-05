@@ -28,7 +28,7 @@ export class BookingService {
             const notification_data: Noti = {
                 from_id: booking.customer,
                 to_id: booking.hotel,
-                for: 'hotelier',
+                for: 'moderator',
                 title: 'New booking',
                 content: `New booking from ${customer.username}`,
                 booking: newBooking._id.toString(),
