@@ -1,6 +1,5 @@
 import { AccountModel } from "@models";
 import crypto from "crypto";
-import mongoose from "mongoose";
 
 export class AccountService {
   private static instance: AccountService | null = null;
@@ -53,6 +52,7 @@ export class AccountService {
         bank_number: user.bank_number,
         wallet: user.wallet,
         phone: user.phone,
+        fullname: user.fullname,
         hotel_name: user.hotel_name,
         hotel_address: user.hotel_address,
         description: user.description,
@@ -186,5 +186,22 @@ export class AccountService {
       description: moderator.description,
       image: moderator.image,
     };
+  }
+  updatePassword = async (username: string, password: string) => {
+    try {
+      const account = await AccountModel.findOneAndUpdate(
+        { username },
+        { password: await this.hashPassword(password) }
+      );
+
+      if (!account) {
+        throw new Error("Account not found");
+      }
+
+      return account;
+    } catch (error) {
+      const _error = error as Error;
+      throw new Error(_error.message);
+    }
   };
 }

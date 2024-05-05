@@ -7,3 +7,4 @@ export * from "./rating.model";
 export * from "./report.model";
 export * from "./room.model";
 export * from "./roomType.model";
+export * from "./otp.model";
