@@ -92,19 +92,14 @@ export class AccountService {
     return crypto.timingSafeEqual(buf, hashedPasswordBuf);
   };
 
-  updateAccount = async (user: Account) => {
-    const account = await AccountModel.findOne({ username: user.username });
+  updateAccount = async (account_id: string, data: any) => {
+    const account = await AccountModel.findById(account_id);
     if (!account) {
       throw new Error("Account not found");
     }
-
-    if (user.password) {
-      user.password = await this.hashPassword(user.password);
-    }
-
     try {
-      await AccountModel.updateOne({ username: user.username }, user);
-      return await AccountModel.findOne({ username: user.username });
+      await AccountModel.findByIdAndUpdate(account_id, data);
+      return await AccountModel.findById(account_id);
     } catch (error) {
       const _error = error as Error;
       throw new Error(_error.message);
@@ -142,5 +137,14 @@ export class AccountService {
       const _error = error as Error;
       throw new Error(_error.message);
     }
+  };
+
+  getHotelIdByName = async (hotel_name: string) => {
+    const account = await AccountModel.findOne({ hotel_name });
+    if (!account) {
+      console.log(hotel_name + "hotel_name");
+      throw new Error("Hotel not found");
+    }
+    return account._id;
   };
 }

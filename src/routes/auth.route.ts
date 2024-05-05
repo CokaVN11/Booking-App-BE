@@ -11,6 +11,6 @@ authRoute.post("/register", AccountController.getInstance().register);
 
 authRoute.post("/login", AccountController.getInstance().login);
 
-authRoute.put("/update", AccountController.getInstance().update);
+authRoute.put("/update/:accId", AccountController.getInstance().update);
 
 authRoute.delete("/delete", AccountController.getInstance().delete);
