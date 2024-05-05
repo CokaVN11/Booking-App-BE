@@ -69,4 +69,14 @@ export class AmenityService {
         }
     }
 
+    getListAmenity = async (amenities_ids: string[]) => {
+        try {
+            const amenities = await AmenityModel.find({ _id: { $in: amenities_ids } });
+            return amenities;
+        } catch (error) {
+            const _error = error as Error;
+            throw new Error(_error.message);
+        }
+    }
+
 }

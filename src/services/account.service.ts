@@ -134,16 +134,59 @@ export class AccountService {
     }
   };
 
-  getModerators = async () => {
+  getModerators = async (start: number, num: number) => {
     try {
-      const moderators = await AccountModel.find({ role: "moderator" });
-      return moderators;
+      const moderators = await AccountModel.find({ role: "moderator" }).skip(start).limit(num);
+
+      const data = moderators.map((moderator) => {
+        return {
+          _id: moderator._id,
+          username: moderator.username,
+          email: moderator.email,
+          role: moderator.role,
+          bankNumber: moderator.bank_number,
+          wallet: moderator.wallet,
+          phone: moderator.phone,
+          fullname: moderator.fullname,
+          hotelName: moderator.hotel_name,
+          hotelAddress: moderator.hotel_address,
+          description: moderator.description,
+          image: moderator.image,
+        };
+      });
+
+      return data;
     } catch (error) {
       const _error = error as Error;
       throw new Error(_error.message);
     }
   };
 
+  getModerator = async (hotel_id: string) => {
+    if (!mongoose.Types.ObjectId.isValid(hotel_id)) {
+      throw new Error("Invalid hotel_id");
+    }
+
+    const moderator = await AccountModel.findById(hotel_id);
+    if (!moderator) {
+      throw new Error("Moderator not found");
+    }
+
+    return {
+      _id: moderator._id,
+      username: moderator.username,
+      email: moderator.email,
+      role: moderator.role,
+      bankNumber: moderator.bank_number,
+      wallet: moderator.wallet,
+      phone: moderator.phone,
+      fullname: moderator.fullname,
+      hotelName: moderator.hotel_name,
+      hotelAddress: moderator.hotel_address,
+      description: moderator.description,
+      image: moderator.image,
+    };
+  }
   updatePassword = async (username: string, password: string) => {
     try {
       const account = await AccountModel.findOneAndUpdate(
