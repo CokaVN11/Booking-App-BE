@@ -14,6 +14,25 @@ export class RatingService {
         return RatingService.instance;
     }
 
+    addRating = async (rating_data: Rating) => {
+        const rating = new RatingModel(rating_data);
+        try {
+            await rating.save();
+            return rating;
+        } catch (error) {
+            const _error = error as Error;
+            throw new Error(_error.message);
+        }
+    };
+
+    getRatingOfHotel = async (hotel_id: string) => {
+        const ratings = await RatingModel.find({ hotel: new mongoose.Types.ObjectId(hotel_id) });
+        if (!ratings) {
+            throw new Error("Rating not found");
+        }
+        return ratings;
+    };
+
     getAverageRating = async (hotel_id: string) => {
         const ratings = await RatingModel.find({ hotel: new mongoose.Types.ObjectId(hotel_id) });
         if (!ratings) {

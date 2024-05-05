@@ -59,3 +59,13 @@ customerRoute.put(
   "/profile/:accountId",
   Controller.AccountController.getInstance().update
 )
+
+customerRoute.get(
+  "/rating/:hotel_id",
+  Controller.RatingController.getInstance().getRatingOfHotel
+);
+
+customerRoute.post(
+  "/rating",
+  Controller.RatingController.getInstance().addRating
+);
