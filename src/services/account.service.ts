@@ -103,8 +103,8 @@ export class AccountService {
       throw new Error("Account not found");
     }
     try {
-      await AccountModel.findByIdAndUpdate(account_id, data);
-      return await AccountModel.findById(account_id);
+      await AccountModel.findByIdAndUpdate(account._id, user);
+      return await AccountModel.findById(account._id);
     } catch (error) {
       const _error = error as Error;
       throw new Error(_error.message);
