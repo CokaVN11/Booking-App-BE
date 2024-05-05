@@ -16,6 +16,17 @@ export class AccountController {
     return AccountController.instance;
   }
 
+  hashPassword = async (req: Request, res: Response) => {
+    try {
+      const { password } = req.body;
+      const hashedPassword = await AccountService.getInstance().hashPassword(password);
+      res.status(200).json({ hashedPassword });
+    } catch (error) {
+      const _error = error as Error;
+      res.status(400).json({ message: _error.message });
+    }
+  };
+
   register = async (req: Request, res: Response) => {
     try {
       
@@ -117,9 +128,11 @@ export class AccountController {
     }
   };
 
-  getModerators = async (_: Request, res: Response) => {
+  getModerators = async (req: Request, res: Response) => {
     try {
-      const moderators = await AccountService.getInstance().getModerators();
+      const num = req.query.number ? parseInt(req.query.number as string) : 10;
+      const start = req.query.start ? parseInt(req.query.start as string) : 0;
+      const moderators = await AccountService.getInstance().getModerators(start, num);
 
       res.status(200).json({ data: moderators });
     } catch (error) {

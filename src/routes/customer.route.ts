@@ -4,7 +4,7 @@ import { Router } from "express";
 export const customerRoute = Router();
 
 customerRoute.get(
-  "/hotel/all",
+  "/hotel",
   Controller.AccountController.getInstance().getModerators
 );
 

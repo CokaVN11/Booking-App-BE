@@ -134,9 +134,9 @@ export class AccountService {
     }
   };
 
-  getModerators = async () => {
+  getModerators = async (start: number, num: number) => {
     try {
-      const moderators = await AccountModel.find({ role: "moderator" });
+      const moderators = await AccountModel.find({ role: "moderator" }).skip(start).limit(num);
 
       const data = moderators.map((moderator) => {
         return {
