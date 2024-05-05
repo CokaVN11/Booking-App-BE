@@ -157,11 +157,14 @@ export class AccountService {
   getModerators = async (user_id: string, start: number, num: number) => {
     try {
       let recommend: AccountRes[] = [];
-      try {
-        recommend = await this.getRecommendation(user_id, num * 2);
-      } catch (error) {
-        console.log(error);
-      }
+      if (start === 0)
+        try {
+          recommend = await this.getRecommendation(user_id, num * 2);
+        } catch (error) {
+          console.log(error);
+        }
+
+      if (recommend.length > num) return recommend.slice(0, num);
 
       const moderators = await AccountModel.find({ role: "moderator" }).skip(start).limit(num - recommend.length);
 
@@ -226,13 +229,12 @@ export class AccountService {
       }
 
       const recommendationRoom = await fetch(`http://localhost:8080/recommend?userId=${user_id}&number=${num}`)
-      const recommendation = await recommendationRoom.json();
+      const recommendation = await recommendationRoom.json().then((data) => data.data);
 
       // find the hotel_id of the recommendation room id and return hotel info
-      const hotelIds = await Promise.all(recommendation.map(async (roomId: string) => await RoomModel.findById(roomId, { hotel_id: 1 })));
-      const uniqueHotelIds = Array.from(new Set(hotelIds.map((hotelId) => hotelId.hotel_id)));
+      const hotelIds = await Promise.all(recommendation.map(async (roomId: string) => await RoomModel.findById(roomId, { hotel: 1 })));
+      const uniqueHotelIds = Array.from(new Set(hotelIds.map((hotelId) => hotelId.hotel.toString())));
       const hotels = await Promise.all(uniqueHotelIds.map(async (hotelId) => await AccountModel.findById(hotelId)));
-
       const data = hotels.map((hotel) => {
         return {
           _id: hotel?._id.toString(),

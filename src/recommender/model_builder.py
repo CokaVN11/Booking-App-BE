@@ -28,7 +28,7 @@ if __name__ == '__main__':
     new_user_len = db["accounts"].count_documents({})
     new_room_len = db["rooms"].count_documents({})
     new_history_len = db["history"].count_documents({})
-    if user_len != new_user_len or room_len != new_room_len or history_len != new_history_len:
+    if new_user_len - user_len > 10 or new_room_len - room_len > 10 or new_history_len - history_len > 10:
       user_len, room_len, history_len = new_user_len, new_room_len, new_history_len
       init = True
       
