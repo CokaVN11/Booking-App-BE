@@ -94,7 +94,6 @@ export class AccountController {
           if (err) {
             res.status(500).json({ message: err.message });
           }
-          user.password = "*****";
           const token = jwt.sign(
             { user },
             process.env.TOKEN_SECRET ?? "default_jwt_secret",
