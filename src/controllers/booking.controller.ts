@@ -37,6 +37,17 @@ export class BookingController {
         }
     };
 
+    getDetailBooking = async (req: Request, res: Response) => {
+        try {
+            const id = req.params.id;
+            const booking = await BookingService.getInstance().getBookingOfHotel(id);
+            res.status(200).json(booking);
+        } catch (error) {
+            const _error = error as Error;
+            res.status(400).json({ message: _error.message });
+        }
+    }
+
     getBookingOfHotel = async (req: Request, res: Response) => {
         try {
             const hotel = req.params.hotel;

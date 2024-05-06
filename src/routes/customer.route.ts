@@ -40,6 +40,11 @@ customerRoute.get(
   "/booking/:customer",
   Controller.BookingController.getInstance().getBookingOfCustomer
 );
+customerRoute.get(
+  "/booking/:id",
+  Controller.BookingController.getInstance().getDetailBooking
+)
+
 customerRoute.put(
   "/booking",
   Controller.BookingController.getInstance().updateBookingDate

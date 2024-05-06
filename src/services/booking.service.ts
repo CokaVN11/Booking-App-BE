@@ -51,7 +51,9 @@ export class BookingService {
 
   getBookingOfCustomer = async (customer: string) => {
     try {
-      const bookings = await BookingModel.find({ customer });
+      const bookings = await BookingModel.aggregate(
+        reservationPipeLine(customer)
+      );
       return bookings;
     } catch (error) {
       const _error = error as Error;
@@ -68,6 +70,19 @@ export class BookingService {
       throw new Error(_error.message);
     }
   };
+
+  getDetailBooking = async (id: string) => {
+    try {
+      const booking = await BookingModel.aggregate(
+        detailReservationPipeLine(id)
+      );
+
+      return booking;
+    } catch (error) { 
+      const _error = error as Error;
+      throw new Error(_error.message);
+    }
+  }
 
   deleteBooking = async (id: string) => {
     const booking = await BookingModel.findByIdAndDelete(id);
@@ -297,7 +312,7 @@ export class BookingService {
   };
 }
 
-const bookingPipeLine = (hotel_id: string, status: string) => [
+const bookingPipeLine = (hotel_id: string, status?: string) => [
   {
     $match: {
       status: status,
@@ -311,6 +326,14 @@ const bookingPipeLine = (hotel_id: string, status: string) => [
       foreignField: "_id",
       as: "room",
     },
+  },
+  {
+    $lookup: {
+      from: "roomtypes",
+      localField: "room_type",
+      foreignField: "_id",
+      as: "roomtype"
+    }
   },
   {
     $lookup: {
@@ -338,18 +361,163 @@ const bookingPipeLine = (hotel_id: string, status: string) => [
     $unwind: "$hotel",
   },
   {
+    $unwind: "$roomtype",
+  },
+  {
     $project: {
       _id: 1,
       hotel_id: "$hotel._id",
       hotel: "$hotel.hotel_name",
       room: "$room.name",
+      price: "$roomtype.price",
+      image: "$room.image",
       status: 1,
       customer: "$customer.username",
       check_in: 1,
       check_out: 1,
       is_canceled: 1,
       createdAt: 1,
-      updatedAt: 1,
+      updatedAt: 1
     },
   },
 ];
+
+const reservationPipeLine = (customer: string) => [
+  {
+    $match: {
+      customer: new ObjectId(customer)
+    },
+  },
+  {
+    $lookup: {
+      from: "rooms",
+      localField: "room",
+      foreignField: "_id",
+      as: "room",
+    },
+  },
+  {
+    $lookup: {
+      from: "roomtypes",
+      localField: "room_type",
+      foreignField: "_id",
+      as: "roomtype"
+    }
+  },
+  {
+    $lookup: {
+      from: "accounts",
+      localField: "customer",
+      foreignField: "_id",
+      as: "customer",
+    },
+  },
+  {
+    $lookup: {
+      from: "accounts",
+      localField: "hotel",
+      foreignField: "_id",
+      as: "hotel",
+    },
+  },
+  {
+    $unwind: "$room",
+  },
+  {
+    $unwind: "$customer",
+  },
+  {
+    $unwind: "$hotel",
+  },
+  {
+    $unwind: "$roomtype",
+  },
+  {
+    $project: {
+      _id: 1,
+      hotel_id: "$hotel._id",
+      hotel: "$hotel.hotel_name",
+      room: "$room.name",
+      roomtype: "$roomtype.name",
+      price: "$roomtype.price",
+      image: "$room.image",
+      status: 1,
+      customer: "$customer.username",
+      check_in: 1,
+      check_out: 1,
+      is_canceled: 1,
+      createdAt: 1,
+      updatedAt: 1
+    },
+  },
+]
+
+const detailReservationPipeLine = (id: string) => [
+  {
+    $match: {
+      _id: new ObjectId(id)
+    },
+  },
+  {
+    $lookup: {
+      from: "rooms",
+      localField: "room",
+      foreignField: "_id",
+      as: "room",
+    },
+  },
+  {
+    $lookup: {
+      from: "roomtypes",
+      localField: "room_type",
+      foreignField: "_id",
+      as: "roomtype"
+    }
+  },
+  {
+    $lookup: {
+      from: "accounts",
+      localField: "customer",
+      foreignField: "_id",
+      as: "customer",
+    },
+  },
+  {
+    $lookup: {
+      from: "accounts",
+      localField: "hotel",
+      foreignField: "_id",
+      as: "hotel",
+    },
+  },
+  {
+    $unwind: "$room",
+  },
+  {
+    $unwind: "$customer",
+  },
+  {
+    $unwind: "$hotel",
+  },
+  {
+    $unwind: "$roomtype",
+  },
+  {
+    $project: {
+      _id: 1,
+      hotel_id: "$hotel._id",
+      hotel: "$hotel.hotel_name",
+      room: "$room.name",
+      roomtype: "$roomtype.name",
+      price: "$roomtype.price",
+      image: "$room.image",
+      status: 1,
+      customer: "$customer.username",
+      check_in: 1,
+      check_out: 1,
+      is_canceled: 1,
+      createdAt: 1,
+      updatedAt: 1
+    },
+  },
+]
