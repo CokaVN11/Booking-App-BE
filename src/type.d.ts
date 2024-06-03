@@ -13,7 +13,7 @@ type Account = {
   image: string | null;
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
-}
+};
 
 // type Amenity
 
@@ -24,19 +24,19 @@ type Bill = {
   bookings: string[];
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
-}
+};
 
 type Booking = {
-  hotel: string;
-  room: string;
-  customer: string;
+  hotel: string | Schema.Types.ObjectId;
+  room: string | Schema.Types.ObjectId;
+  customer: string | Schema.Types.ObjectId;
   check_in: Date;
   check_out: Date;
   is_canceled: boolean;
   status: string;
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
-}
+};
 
 type Noti = {
   from_id: string;
@@ -50,7 +50,7 @@ type Noti = {
   is_read?: boolean;
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
-}
+};
 
 type Rating = {
   customer: string;
@@ -60,7 +60,7 @@ type Rating = {
   star: number;
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
-}
+};
 
 type Report = {
   booking: string;
@@ -70,7 +70,7 @@ type Report = {
   is_read: boolean;
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
-}
+};
 
 type Room = {
   hotel: string;
@@ -80,7 +80,7 @@ type Room = {
   is_booked?: boolean;
   image: string[];
   amenities_ids: string[];
-}
+};
 
 type RoomType = {
   name: string;
@@ -91,6 +91,4 @@ type RoomType = {
   bedroom: number;
   bathroom: number;
   area: number;
-}
-
-
+};
