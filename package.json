@@ -41,6 +41,7 @@
     "@types/nodemailer": "^6.4.14",
     "@types/otp-generator": "^4.0.2",
     "@types/passport-local": "^1.0.38",
+    "cz-conventional-changelog": "^3.3.0",
     "dotenv": "^16.4.1",
     "eslint": "^8.40.0",
     "eslint-config-prettier": "^8.8.0",
@@ -60,5 +61,10 @@
     "@middlewares": "src/middlewares",
     "@services": "src/services",
     "@models": "src/models"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
