@@ -1,8 +1,7 @@
-import { Router } from "express";
-import * as Controller from "@controllers";
+import { Router } from 'express';
 
 export const bookingRoute = Router();
 
-bookingRoute.get("/", (_req, res) => {
-  res.send("Booking route");
+bookingRoute.get('/', (_req, res) => {
+  res.send('Booking route');
 });
