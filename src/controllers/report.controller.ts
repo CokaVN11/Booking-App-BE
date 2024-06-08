@@ -2,17 +2,17 @@ import { Request, Response } from "express";
 import { ReportService } from "@services";
 
 export class ReportController {
-    private static instance: ReportController | null = null;
+  private static instance: ReportController | null = null;
 
-    private constructor() { }
+  private constructor() {}
 
-    static getInstance(): ReportController {
-        if (!ReportController.instance) {
-            ReportController.instance = new ReportController();
-        }
-
-        return ReportController.instance;
+  static getInstance(): ReportController {
+    if (!ReportController.instance) {
+      ReportController.instance = new ReportController();
     }
 
-    // Code here
+    return ReportController.instance;
+  }
+
+  // Code here
 }
