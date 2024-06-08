@@ -1,6 +1,6 @@
-import { AccountModel, RoomModel } from '@models';
-import crypto from 'crypto';
-import mongoose from 'mongoose';
+import { AccountModel, RoomModel } from "@models";
+import crypto from "crypto";
+import mongoose from "mongoose";
 
 type AccountRes = {
   _id?: string;
@@ -33,21 +33,21 @@ export class AccountService {
   getAccount = async (id: string) => {
     const account = await AccountModel.findById(id);
     if (!account) {
-      throw new Error('Account not found');
+      throw new Error("Account not found");
     }
     return account;
   };
 
   addAccount = async (user: Account) => {
     if (await this.getAccountByUsername(user.username)) {
-      throw new Error('Account already exists');
+      throw new Error("Account already exists");
     }
 
     user.password = await this.hashPassword(user.password);
 
     let account;
 
-    if (user.role === 'customer') {
+    if (user.role === "customer") {
       account = new AccountModel({
         username: user.username,
         email: user.email,
@@ -96,14 +96,17 @@ export class AccountService {
   };
 
   hashPassword = async (password: string) => {
-    const salt = crypto.randomBytes(16).toString('hex');
+    const salt = crypto.randomBytes(16).toString("hex");
     const buf = crypto.scryptSync(password, salt, 64);
-    return `${buf.toString('hex')}.${salt}`;
+    return `${buf.toString("hex")}.${salt}`;
   };
 
-  comparePasswordWithHash = async (password: string, storedPassword: string) => {
-    const [hashedPassword, salt] = storedPassword.split('.');
-    const buf = Buffer.from(hashedPassword, 'hex');
+  comparePasswordWithHash = async (
+    password: string,
+    storedPassword: string
+  ) => {
+    const [hashedPassword, salt] = storedPassword.split(".");
+    const buf = Buffer.from(hashedPassword, "hex");
     const hashedPasswordBuf = crypto.scryptSync(password, salt, 64);
     return crypto.timingSafeEqual(buf, hashedPasswordBuf);
   };
@@ -115,7 +118,7 @@ export class AccountService {
   updateAccount = async (accountId: string, user: Account) => {
     const account = await AccountModel.findOne({ username: user.username });
     if (!account) {
-      throw new Error('Account not found');
+      throw new Error("Account not found");
     }
     try {
       await AccountModel.findByIdAndUpdate(accountId, user);
@@ -138,7 +141,7 @@ export class AccountService {
   deleteAccount = async (account_id: string) => {
     const account = await AccountModel.findById(account_id);
     if (!account) {
-      throw new Error('Account not found');
+      throw new Error("Account not found");
     }
     try {
       await AccountModel.findByIdAndDelete(account_id);
@@ -151,7 +154,9 @@ export class AccountService {
 
   getModerators = async (user_id: string, start: number, num: number) => {
     try {
-      const moderators = await AccountModel.find({ role: 'moderator' }).skip(start).limit(num);
+      const moderators = await AccountModel.find({ role: "moderator" })
+        .skip(start)
+        .limit(num);
 
       const data = moderators.map((moderator) => {
         return {
@@ -171,7 +176,10 @@ export class AccountService {
       });
 
       // return unique moderators
-      return data.filter((moderator, index, self) => self.findIndex((t) => t._id === moderator._id) === index);
+      return data.filter(
+        (moderator, index, self) =>
+          self.findIndex((t) => t._id === moderator._id) === index
+      );
     } catch (error) {
       const _error = error as Error;
       throw new Error(_error.message);
@@ -180,12 +188,12 @@ export class AccountService {
 
   getModerator = async (hotel_id: string) => {
     if (!mongoose.Types.ObjectId.isValid(hotel_id)) {
-      throw new Error('Invalid hotel_id');
+      throw new Error("Invalid hotel_id");
     }
 
     const moderator = await AccountModel.findById(hotel_id);
     if (!moderator) {
-      throw new Error('Moderator not found');
+      throw new Error("Moderator not found");
     }
 
     return {
@@ -212,7 +220,7 @@ export class AccountService {
       );
 
       if (!account) {
-        throw new Error('Account not found');
+        throw new Error("Account not found");
       }
 
       return account;
@@ -225,15 +233,18 @@ export class AccountService {
   getHotelIdByName = async (hotel_name: string) => {
     const account = await AccountModel.findOne({ hotel_name });
     if (!account) {
-      console.log(hotel_name + 'hotel_name');
-      throw new Error('Hotel not found');
+      console.log(hotel_name + "hotel_name");
+      throw new Error("Hotel not found");
     }
     return account._id;
   };
 
   searchHotel = async (keyword: string, start: number, num: number) => {
     try {
-      const hotels = await AccountModel.find({ role: 'moderator', hotel_name: { $regex: keyword, $options: 'i' } })
+      const hotels = await AccountModel.find({
+        role: "moderator",
+        hotel_name: { $regex: keyword, $options: "i" },
+      })
         .skip(start)
         .limit(num);
 

@@ -33,10 +33,14 @@ export class RoomController {
       const is_full_detail = req.query.is_full_detail || false;
       // De lay luon data roomType
       if (is_full_detail === "true") {
-        rooms = await RoomService.getInstance().getFullRoomDetailByHotelId(req.params.hotel_id);
+        rooms = await RoomService.getInstance().getFullRoomDetailByHotelId(
+          req.params.hotel_id
+        );
       } else {
-        const is_accepted_bool = is_accepted != undefined ? (is_accepted === "true") : undefined;
-        const is_booked_bool = is_booked != undefined ? (is_booked === "true") : undefined;
+        const is_accepted_bool =
+          is_accepted != undefined ? is_accepted === "true" : undefined;
+        const is_booked_bool =
+          is_booked != undefined ? is_booked === "true" : undefined;
         rooms = await RoomService.getInstance().getRoomByHotelId(
           req.params.hotel_id,
           room_type as string,
@@ -150,7 +154,9 @@ export class RoomController {
 
   getAmenitiesByHotelId = async (req: Request, res: Response) => {
     try {
-      const amenities = await RoomService.getInstance().getAmenitiesByHotelId(req.params.hotel_id);
+      const amenities = await RoomService.getInstance().getAmenitiesByHotelId(
+        req.params.hotel_id
+      );
       res.json({ data: amenities });
     } catch (error) {
       const _error = error as Error;

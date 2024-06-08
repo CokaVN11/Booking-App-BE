@@ -46,7 +46,7 @@ export class OTPService {
       const _error = error as Error;
       throw new Error(`Error deleting OTP: ${_error.message}`);
     }
-  }
+  };
 
   sendOTP = async (email: string, otp: string) => {
     try {

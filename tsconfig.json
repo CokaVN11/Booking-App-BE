@@ -2,7 +2,7 @@
   "files": ["./src/type.d.ts", "./src/env.d.ts"],
   "exclude": ["node_modules"],
   "include": ["./src/**/*.ts"],
-  "ts-node": {"esm": true},
+  "ts-node": { "esm": true },
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
@@ -15,8 +15,8 @@
       "@middlewares/*": ["src/middlewares/*"],
       "@services": ["src/services"],
       "@services/*": ["src/services/*"],
-      "@models" : ["src/models"],
-      "@models/*": ["src/models/*"],
+      "@models": ["src/models"],
+      "@models/*": ["src/models/*"]
     },
     "outDir": "dist",
     "composite": false,
@@ -44,6 +44,6 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "resolveJsonModule": true,
-    "types": ["jest", "node"],
+    "types": ["jest", "node"]
   }
 }
