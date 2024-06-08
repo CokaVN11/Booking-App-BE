@@ -5,11 +5,17 @@ import { PassportStatic } from "passport";
 const passportConfig = (passport: PassportStatic) => {
   passport.use(
     new LocalStrategy(
-      { usernameField: "username", passwordField: "password", passReqToCallback: true },
+      {
+        usernameField: "username",
+        passwordField: "password",
+        passReqToCallback: true,
+      },
       async (req, username, password, done) => {
         try {
           const isBio = req.query.isBio === "true";
-          const user = await AccountService.getInstance().getAccountByUsername(username);
+          const user = await AccountService.getInstance().getAccountByUsername(
+            username
+          );
           let isPasswordValid = false;
 
           if (!user) {
@@ -19,9 +25,17 @@ const passportConfig = (passport: PassportStatic) => {
           }
 
           if (isBio) {
-            isPasswordValid = await AccountService.getInstance().comparePassword(password, user.password);
+            isPasswordValid =
+              await AccountService.getInstance().comparePassword(
+                password,
+                user.password
+              );
           } else {
-            isPasswordValid = await AccountService.getInstance().comparePasswordWithHash(password, user.password);
+            isPasswordValid =
+              await AccountService.getInstance().comparePasswordWithHash(
+                password,
+                user.password
+              );
           }
 
           if (!isPasswordValid) {
@@ -33,8 +47,8 @@ const passportConfig = (passport: PassportStatic) => {
         } catch (error) {
           return done(error);
         }
-      },
-    ),
+      }
+    )
   );
 
   passport.serializeUser((user: any, done) => {
@@ -43,7 +57,9 @@ const passportConfig = (passport: PassportStatic) => {
 
   passport.deserializeUser(async (username: string, done) => {
     try {
-      const user = await AccountService.getInstance().getAccountByUsername(username);
+      const user = await AccountService.getInstance().getAccountByUsername(
+        username
+      );
       done(null, user);
     } catch (error) {
       done(error);

@@ -1,17 +1,17 @@
 import { BillModel } from "@models";
 
 export class BillService {
-    private static instance: BillService | null = null;
+  private static instance: BillService | null = null;
 
-    private constructor() { }
+  private constructor() {}
 
-    static getInstance(): BillService {
-        if (!BillService.instance) {
-            BillService.instance = new BillService();
-        }
-
-        return BillService.instance;
+  static getInstance(): BillService {
+    if (!BillService.instance) {
+      BillService.instance = new BillService();
     }
 
-    // Code here    
+    return BillService.instance;
+  }
+
+  // Code here
 }

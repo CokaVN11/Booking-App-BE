@@ -4,7 +4,7 @@ import { RoomTypeService } from "@services";
 export class RoomTypeController {
   private static instance?: RoomTypeController;
 
-  private constructor() { }
+  private constructor() {}
 
   static getInstance(): RoomTypeController {
     if (!RoomTypeController.instance) {
@@ -23,21 +23,26 @@ export class RoomTypeController {
       const _error = error as Error;
       res.status(400).json({ message: _error.message });
     }
-  }
+  };
 
   getRoomTypeByHotelId = async (req: Request, res: Response) => {
     try {
-      const roomTypes = await RoomTypeService.getInstance().getRoomTypeByHotelId(req.params.hotel_id);
+      const roomTypes =
+        await RoomTypeService.getInstance().getRoomTypeByHotelId(
+          req.params.hotel_id
+        );
       res.status(200).json({ data: roomTypes });
     } catch (error) {
       const _error = error as Error;
       res.status(400).json({ message: _error.message });
     }
-  }
+  };
 
   addRoomType = async (req: Request, res: Response) => {
     try {
-      const roomType = await RoomTypeService.getInstance().addRoomType(req.body);
+      const roomType = await RoomTypeService.getInstance().addRoomType(
+        req.body
+      );
       res.status(200).json({ data: roomType });
     } catch (error) {
       const _error = error as Error;
@@ -47,21 +52,26 @@ export class RoomTypeController {
 
   updateRoomType = async (req: Request, res: Response) => {
     try {
-      const roomType = await RoomTypeService.getInstance().updateRoomType(req.params.id, req.body);
+      const roomType = await RoomTypeService.getInstance().updateRoomType(
+        req.params.id,
+        req.body
+      );
       res.status(200).json({ data: roomType });
     } catch (error) {
       const _error = error as Error;
       res.status(400).json({ message: _error.message });
     }
-  }
+  };
 
   deleteRoomType = async (req: Request, res: Response) => {
     try {
-      const roomType = await RoomTypeService.getInstance().deleteRoomType(req.params.id);
+      const roomType = await RoomTypeService.getInstance().deleteRoomType(
+        req.params.id
+      );
       res.status(200).json({ data: roomType });
     } catch (error) {
       const _error = error as Error;
       res.status(400).json({ message: _error.message });
     }
-  }
+  };
 }

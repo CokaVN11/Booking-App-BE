@@ -1,82 +1,89 @@
 import { AmenityModel } from "@models";
 
 export class AmenityService {
-    private static instance: AmenityService | null = null;
+  private static instance: AmenityService | null = null;
 
-    private constructor() { }
+  private constructor() {}
 
-    static getInstance(): AmenityService {
-        if (!AmenityService.instance) {
-            AmenityService.instance = new AmenityService();
-        }
-
-        return AmenityService.instance;
+  static getInstance(): AmenityService {
+    if (!AmenityService.instance) {
+      AmenityService.instance = new AmenityService();
     }
 
-    getAllAmenity = async () => {
-        const amenities = await AmenityModel.find();
-        if (!amenities) {
-            throw new Error("No amenities found");
-        }
-        return amenities;
-    };
+    return AmenityService.instance;
+  }
 
-    getAmenity = async (id: string) => {
-        const amenity = await AmenityModel.findById(id);
-        if (!amenity) {
-            throw new Error("Amenity not found");
-        }
-        return amenity;
+  getAllAmenity = async () => {
+    const amenities = await AmenityModel.find();
+    if (!amenities) {
+      throw new Error("No amenities found");
     }
+    return amenities;
+  };
 
-    addAmenity = async (name: string) => {
-        const amenity = new AmenityModel({ name });
-        try {
-            await amenity.save();
-            return amenity;
-        } catch (error) {
-            const _error = error as Error;
-            throw new Error(_error.message);
-        }
+  getAmenity = async (id: string) => {
+    const amenity = await AmenityModel.findById(id);
+    if (!amenity) {
+      throw new Error("Amenity not found");
     }
+    return amenity;
+  };
 
-    updateAmenity = async (id: string, name: string) => {
-        const amenity = await AmenityModel.findByIdAndUpdate(id, { name }, { new: true });
-        if (!amenity) {
-            throw new Error("Amenity not found");
-        }
-        return amenity;
+  addAmenity = async (name: string) => {
+    const amenity = new AmenityModel({ name });
+    try {
+      await amenity.save();
+      return amenity;
+    } catch (error) {
+      const _error = error as Error;
+      throw new Error(_error.message);
     }
+  };
 
-    deleteAmenity = async (id: string) => {
-        const amenity = await AmenityModel.findByIdAndDelete(id);
-        if (!amenity) {
-            throw new Error("Amenity not found");
-        }
-        return amenity;
+  updateAmenity = async (id: string, name: string) => {
+    const amenity = await AmenityModel.findByIdAndUpdate(
+      id,
+      { name },
+      { new: true }
+    );
+    if (!amenity) {
+      throw new Error("Amenity not found");
     }
+    return amenity;
+  };
 
-    checkListAmenity = async (amenities_ids: string[]) => {
-        try {
-            const amenities = await AmenityModel.find({ _id: { $in: amenities_ids } });
-            if (amenities.length != amenities_ids.length) {
-                return false;
-            }
-            return true;
-        } catch (error) {
-            const _error = error as Error;
-            throw new Error(_error.message);
-        }
+  deleteAmenity = async (id: string) => {
+    const amenity = await AmenityModel.findByIdAndDelete(id);
+    if (!amenity) {
+      throw new Error("Amenity not found");
     }
+    return amenity;
+  };
 
-    getListAmenity = async (amenities_ids: string[]) => {
-        try {
-            const amenities = await AmenityModel.find({ _id: { $in: amenities_ids } });
-            return amenities;
-        } catch (error) {
-            const _error = error as Error;
-            throw new Error(_error.message);
-        }
+  checkListAmenity = async (amenities_ids: string[]) => {
+    try {
+      const amenities = await AmenityModel.find({
+        _id: { $in: amenities_ids },
+      });
+      if (amenities.length != amenities_ids.length) {
+        return false;
+      }
+      return true;
+    } catch (error) {
+      const _error = error as Error;
+      throw new Error(_error.message);
     }
+  };
 
+  getListAmenity = async (amenities_ids: string[]) => {
+    try {
+      const amenities = await AmenityModel.find({
+        _id: { $in: amenities_ids },
+      });
+      return amenities;
+    } catch (error) {
+      const _error = error as Error;
+      throw new Error(_error.message);
+    }
+  };
 }

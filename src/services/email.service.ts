@@ -11,7 +11,7 @@ export class EmailService {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD,
       },
-      secure: true
+      secure: true,
     });
   }
 
@@ -39,5 +39,4 @@ export class EmailService {
       throw new Error(`Error sending OTP: ${_error.message}`);
     }
   };
-
 }

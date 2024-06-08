@@ -1,19 +1,17 @@
 import { ReportModel } from "@models";
 
 export class ReportService {
-    private static instance: ReportService | null = null;
+  private static instance: ReportService | null = null;
 
-    private constructor() { }
+  private constructor() {}
 
-    static getInstance(): ReportService {
-        if (!ReportService.instance) {
-            ReportService.instance = new ReportService();
-        }
-
-        return ReportService.instance;
+  static getInstance(): ReportService {
+    if (!ReportService.instance) {
+      ReportService.instance = new ReportService();
     }
 
-    // Code here    
+    return ReportService.instance;
+  }
+
+  // Code here
 }
-
-
